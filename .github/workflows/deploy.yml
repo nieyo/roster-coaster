@@ -73,7 +73,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_TAG }} # Example: username/project:latest
+          tags: ${{ vars.DOCKERHUB_TAG }} # Example: username/project:latest
           context: .
 
   deploy:
