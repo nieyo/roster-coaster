@@ -1,4 +1,4 @@
-name: SonarQube backend
+name: SonarQube Analysis on Backend
 on:
   push:
     branches:
