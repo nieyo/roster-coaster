@@ -21,6 +21,10 @@ public class ShiftService {
             throw new IllegalArgumentException("startTime and endTime are required");
         }
 
+        if (shiftToSave.startTime().isAfter(shiftToSave.endTime())) {
+            throw new IllegalArgumentException("Start must be before End");
+        }
+
         return shiftRepository.save(shiftToSave);
     }
 }

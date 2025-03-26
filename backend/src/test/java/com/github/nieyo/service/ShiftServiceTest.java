@@ -71,4 +71,16 @@ class ShiftServiceTest {
         verify(shiftRepository, never()).save(any());
     }
 
+    @Test
+    void saveShift_ShouldThrowException_WhenEndTimeBeforeStartTime() {
+        Shift invalidShift = new Shift(
+                null,
+                Instant.parse("2025-03-26T14:00:00Z"), // Endzeit
+                Instant.parse("2025-03-26T12:00:00Z"), // Startzeit (falsch herum)
+                Map.of()
+        );
+
+        assertThrows(IllegalArgumentException.class, () -> shiftService.saveShift(invalidShift));
+    }
+
 }
