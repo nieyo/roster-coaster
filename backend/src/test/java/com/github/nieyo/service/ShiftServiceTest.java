@@ -61,11 +61,11 @@ class ShiftServiceTest {
 
     @Test
     void saveShift_ShouldThrowException_WhenRequiredFieldIsNull() {
-        Shift invalidShift1 = new Shift(null, null, Instant.now(), Map.of());
-        Shift invalidShift2 = new Shift(null, startTime, null, Map.of());
+        Shift invalidShiftNoStart = new Shift(null, null, Instant.now(), Map.of());
+        Shift invalidShiftNoEnd = new Shift(null, startTime, null, Map.of());
 
-        assertThrows(IllegalArgumentException.class, () -> shiftService.saveShift(invalidShift1));
-        assertThrows(IllegalArgumentException.class, () -> shiftService.saveShift(invalidShift2));
+        assertThrows(IllegalArgumentException.class, () -> shiftService.saveShift(invalidShiftNoStart));
+        assertThrows(IllegalArgumentException.class, () -> shiftService.saveShift(invalidShiftNoEnd));
 
         // Verify repository was never called
         verify(shiftRepository, never()).save(any());
@@ -75,12 +75,15 @@ class ShiftServiceTest {
     void saveShift_ShouldThrowException_WhenEndTimeBeforeStartTime() {
         Shift invalidShift = new Shift(
                 null,
-                Instant.parse("2025-03-26T14:00:00Z"), // Endzeit
-                Instant.parse("2025-03-26T12:00:00Z"), // Startzeit (falsch herum)
+                endTime,
+                startTime, // wrong order
                 Map.of()
         );
 
         assertThrows(IllegalArgumentException.class, () -> shiftService.saveShift(invalidShift));
+
+        // Verify repository was never called
+        verify(shiftRepository, never()).save(any());
     }
 
 }
