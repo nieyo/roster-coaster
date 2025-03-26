@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class ShiftServiceTest {
@@ -17,7 +18,7 @@ class ShiftServiceTest {
     ShiftService shiftService = new ShiftService(shiftRepository);
 
     @Test
-    void save_ShouldPersistNewEntity() {
+    void saveShift_ShouldPersistNewEntity() {
         // GIVEN
         Shift expected = new Shift(
                 null, // ID ist zunächst null (wird erst generiert)
@@ -37,13 +38,22 @@ class ShiftServiceTest {
         when(shiftRepository.save(expected)).thenReturn(savedShift);
 
         // WHEN
-        Shift result = shiftService.saveShift(expected);
+        Shift actual = shiftService.saveShift(expected);
 
         // THEN
         verify(shiftRepository).save(expected);
 
-        assertEquals(expectedId, result.id()); // ID wurde zugewiesen
-        assertEquals(expected.startTime(), result.startTime()); // Daten bleiben konsistent
+        assertEquals(expectedId, actual.id());
+        assertEquals(expected.startTime(), actual.startTime());
+    }
+
+    @Test
+    void saveShift_ShouldThrowException_WhenShiftIsNull() {
+        // WHEN & THEN
+        assertThrows(IllegalArgumentException.class, () -> shiftService.saveShift(null));
+
+        // Verify repository was never called
+        verify(shiftRepository, never()).save(any());
     }
 
 }

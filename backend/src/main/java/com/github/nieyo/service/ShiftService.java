@@ -12,6 +12,11 @@ public class ShiftService {
     private final ShiftRepository shiftRepository;
 
     public Shift saveShift(Shift shiftToSave) {
+
+        if (shiftToSave == null){
+            throw new IllegalArgumentException("Shift cannot be null");
+        }
+
         return shiftRepository.save(shiftToSave);
     }
 }
