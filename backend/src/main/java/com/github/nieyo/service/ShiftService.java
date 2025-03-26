@@ -12,19 +12,21 @@ public class ShiftService {
     private final ShiftRepository shiftRepository;
 
     public Shift saveShift(Shift shiftToSave) {
+        validateShift(shiftToSave);
+        return shiftRepository.save(shiftToSave);
+    }
 
-        if (shiftToSave == null){
+    private void validateShift(Shift shiftToValidate) {
+        if (shiftToValidate == null) {
             throw new IllegalArgumentException("Shift cannot be null");
         }
 
-        if (shiftToSave.startTime() == null || shiftToSave.endTime() == null) {
+        if (shiftToValidate.startTime() == null || shiftToValidate.endTime() == null) {
             throw new IllegalArgumentException("startTime and endTime are required");
         }
 
-        if (shiftToSave.startTime().isAfter(shiftToSave.endTime())) {
+        if (shiftToValidate.startTime().isAfter(shiftToValidate.endTime())) {
             throw new IllegalArgumentException("Start must be before End");
         }
-
-        return shiftRepository.save(shiftToSave);
     }
 }
