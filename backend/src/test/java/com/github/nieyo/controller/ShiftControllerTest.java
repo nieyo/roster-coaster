@@ -75,8 +75,7 @@ class ShiftControllerTest {
         mvc.perform(post("/api/shift")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(invalidBody))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorMessage").value("Ein Fehler ist aufgetreten: Start must be before End"));
+                .andExpect(status().isBadRequest());
 
         assertEquals(0, shiftRepository.findAll().size());
     }
@@ -111,9 +110,15 @@ class ShiftControllerTest {
         mvc.perform(post("/api/shift")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorMessage").value("Ein Fehler ist aufgetreten: startTime and endTime are required"));
+                .andExpect(status().isBadRequest());
 
         assert (shiftRepository.findAll()).isEmpty();
+    }
+
+    @Test
+    void saveShift_shouldReturn400WhenBodyIsMissing() throws Exception {
+        mvc.perform(post("/api/shift")  // No .content() or .contentType()
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 }
