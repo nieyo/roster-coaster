@@ -1,12 +1,14 @@
-package com.github.nieyo;
+package com.github.nieyo.model;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
+import java.util.Optional;
+
 public record User(
         @Id ObjectId id,
         String name,
-        String email,
+        Optional<String> email,
         boolean isAnonymous
 ) {
 }

@@ -1,15 +1,15 @@
-package com.github.nieyo;
+package com.github.nieyo.model;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 import java.time.Instant;
-import java.util.List;
+import java.util.Map;
 
 public record Shift(
         @Id ObjectId id,
         Instant startTime,
         Instant endTime,
-        List<User> participants
+        Map<ObjectId, User> participants
 ) {
 }
