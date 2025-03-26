@@ -17,6 +17,10 @@ public class ShiftService {
             throw new IllegalArgumentException("Shift cannot be null");
         }
 
+        if (shiftToSave.startTime() == null || shiftToSave.endTime() == null) {
+            throw new IllegalArgumentException("startTime and endTime are required");
+        }
+
         return shiftRepository.save(shiftToSave);
     }
 }

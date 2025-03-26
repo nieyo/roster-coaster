@@ -17,13 +17,16 @@ class ShiftServiceTest {
     ShiftRepository shiftRepository = mock(ShiftRepository.class);
     ShiftService shiftService = new ShiftService(shiftRepository);
 
+    Instant startTime = Instant.parse("2025-03-26T12:00:00Z");
+    Instant endTime = Instant.parse("2025-03-26T14:00:00Z");
+
     @Test
     void saveShift_ShouldPersistNewEntity() {
         // GIVEN
         Shift expected = new Shift(
                 null, // ID ist zunächst null (wird erst generiert)
-                Instant.parse("2025-03-26T12:00:00Z"),
-                Instant.parse("2025-03-26T14:00:00Z"),
+                startTime,
+                endTime,
                 Map.of()
         );
 
@@ -51,6 +54,18 @@ class ShiftServiceTest {
     void saveShift_ShouldThrowException_WhenShiftIsNull() {
         // WHEN & THEN
         assertThrows(IllegalArgumentException.class, () -> shiftService.saveShift(null));
+
+        // Verify repository was never called
+        verify(shiftRepository, never()).save(any());
+    }
+
+    @Test
+    void saveShift_ShouldThrowException_WhenRequiredFieldIsNull() {
+        Shift invalidShift1 = new Shift(null, null, Instant.now(), Map.of());
+        Shift invalidShift2 = new Shift(null, startTime, null, Map.of());
+
+        assertThrows(IllegalArgumentException.class, () -> shiftService.saveShift(invalidShift1));
+        assertThrows(IllegalArgumentException.class, () -> shiftService.saveShift(invalidShift2));
 
         // Verify repository was never called
         verify(shiftRepository, never()).save(any());
