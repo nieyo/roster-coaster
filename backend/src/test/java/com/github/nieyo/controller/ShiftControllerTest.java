@@ -45,11 +45,12 @@ class ShiftControllerTest {
                         .content(requestBody))
 
                 // Then (HTTP layer)
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.startTime").value("2025-03-26T12:00:00Z"))
                 .andExpect(jsonPath("$.endTime").value("2025-03-26T14:00:00Z"))
-                .andExpect(jsonPath("$.participants").value(""));
+                .andExpect(jsonPath("$.participants").isMap())
+                .andExpect(jsonPath("$.participants").isEmpty());
 
         // Verify database state
         List<Shift> shifts = shiftRepository.findAll();
@@ -57,10 +58,25 @@ class ShiftControllerTest {
         assertEquals("2025-03-26T12:00:00Z", shifts.getFirst().startTime().toString());
     }
 
+    @Test
+    @DirtiesContext
+    void saveShift_shouldRejectInvalidTimeRange() throws Exception {
+        String invalidBody = """
+        {
+            "startTime": "2025-03-26T14:00:00Z",
+            "endTime": "2025-03-26T12:00:00Z",
+            "participants": {}
+        }
+        """;
 
+        mvc.perform(post("/api/shift")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidBody))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorMessage").value("Ein Fehler ist aufgetreten: Start must be before End"));
 
-
-
-
+        List<Shift> shifts = shiftRepository.findAll();
+        assertEquals(0, shifts.size());
+    }
 
 }
