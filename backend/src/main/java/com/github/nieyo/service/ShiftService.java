@@ -10,10 +10,13 @@ import org.springframework.stereotype.Service;
 public class ShiftService {
 
     private final ShiftRepository shiftRepository;
+    private final IdService idService;
 
     public Shift saveShift(Shift shiftToSave) {
 
         validateShift(shiftToSave);
+        String id = idService.randomId();
+        shiftToSave = new Shift(id, shiftToSave.startTime(), shiftToSave.endTime(), shiftToSave.participants());
         return shiftRepository.save(shiftToSave);
     }
 

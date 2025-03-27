@@ -1,53 +1,51 @@
 package com.github.nieyo.service;
 
 import com.github.nieyo.model.Shift;
+import com.github.nieyo.model.User;
 import com.github.nieyo.repository.ShiftRepository;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ShiftServiceTest {
 
     ShiftRepository shiftRepository = mock(ShiftRepository.class);
-    ShiftService shiftService = new ShiftService(shiftRepository);
+    IdService idService = mock(IdService.class);
+    ShiftService shiftService = new ShiftService(shiftRepository, idService);
+
 
     Instant startTime = Instant.parse("2025-03-26T12:00:00Z");
     Instant endTime = Instant.parse("2025-03-26T14:00:00Z");
+    Map<String, User> participants = Map.of();
+
 
     @Test
     void saveShift_ShouldPersistNewEntity() {
+
         // GIVEN
-        Shift expected = new Shift(
-                null, // ID ist zunächst null (wird erst generiert)
-                startTime,
-                endTime,
-                Map.of()
-        );
+        Shift inputShift = new Shift(null, startTime, endTime, Map.of());
 
-        ObjectId expectedId = new ObjectId();
-        Shift savedShift = new Shift(
-                expectedId, // Simuliere die generierte ID
-                expected.startTime(),
-                expected.endTime(),
-                expected.participants()
-        );
+        String expectedId = "generated-id";
+        when(idService.randomId()).thenReturn(expectedId);
 
-        when(shiftRepository.save(expected)).thenReturn(savedShift);
+        Shift expectedShift = new Shift(expectedId, startTime, endTime, participants);
+        when(shiftRepository.save(any(Shift.class))).thenReturn(expectedShift);
 
         // WHEN
-        Shift actual = shiftService.saveShift(expected);
+        Shift result = shiftService.saveShift(inputShift);
 
         // THEN
-        verify(shiftRepository).save(expected);
-
-        assertEquals(expectedId, actual.id());
-        assertEquals(expected.startTime(), actual.startTime());
+        verify(idService).randomId();
+        verify(shiftRepository).save(any(Shift.class));
+        assertNotNull(result);
+        assertEquals(expectedId, result.id());
+        assertEquals(startTime, result.startTime());
+        assertEquals(endTime, result.endTime());
+        assertEquals(participants, result.participants());
     }
 
     @Test
