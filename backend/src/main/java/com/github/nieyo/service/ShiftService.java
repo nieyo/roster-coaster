@@ -12,6 +12,7 @@ public class ShiftService {
     private final ShiftRepository shiftRepository;
 
     public Shift saveShift(Shift shiftToSave) {
+
         validateShift(shiftToSave);
         return shiftRepository.save(shiftToSave);
     }
