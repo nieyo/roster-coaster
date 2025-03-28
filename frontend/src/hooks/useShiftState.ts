@@ -31,6 +31,7 @@ const useShiftState = () => {
         })
     }
 
+    // TODO: refactor and fix whatever the problem is
     useEffect(() => {
         getShifts()
     }, [])
