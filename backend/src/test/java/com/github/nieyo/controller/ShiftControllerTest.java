@@ -1,6 +1,7 @@
 package com.github.nieyo.controller;
 
 import com.github.nieyo.model.Shift;
+import com.github.nieyo.model.User;
 import com.github.nieyo.repository.ShiftRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,12 +11,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.Instant;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -27,10 +29,16 @@ class ShiftControllerTest {
     @Autowired
     private ShiftRepository shiftRepository;
 
+    Instant startTime = Instant.parse("2025-03-26T12:00:00Z");
+    Instant endTime = Instant.parse("2025-03-26T14:00:00Z");
+    List<User> participants = List.of();
+
     @BeforeEach
     void setUp() {
         shiftRepository.deleteAll();
     }
+
+    // CREATE
 
     @Test
     void saveShift_shouldPersistShift() throws Exception {
@@ -120,5 +128,50 @@ class ShiftControllerTest {
         mvc.perform(post("/api/shift")  // No .content() or .contentType()
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+    }
+
+    // GET ALL
+
+    @Test
+    void getShifts_whenEmpty_returnEmptyList() throws Exception {
+        // WHEN
+        mvc.perform(get("/api/shift")
+                        .contentType(MediaType.APPLICATION_JSON))
+                // THEN
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                  []
+                """));
+    }
+
+    @Test
+    void getMovies_whenFound_returnMovies() throws Exception {
+        Shift shift1 = new Shift("1", startTime, endTime, participants);
+        Shift shift2 = new Shift("2", startTime, endTime, participants);
+
+        shiftRepository.save(shift1);
+        shiftRepository.save(shift2);
+
+        // WHEN
+        mvc.perform(get("/api/shift")
+                        .contentType(MediaType.APPLICATION_JSON))
+                // THEN
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                [
+                  {
+                    "id": "1",
+                    "startTime": "2025-03-26T12:00:00Z",
+                    "endTime": "2025-03-26T14:00:00Z",
+                    "participants": []
+                  },
+                  {
+                    "id": "2",
+                    "startTime": "2025-03-26T12:00:00Z",
+                    "endTime": "2025-03-26T14:00:00Z",
+                    "participants": []
+                  }
+                ]
+               """));
     }
 }
