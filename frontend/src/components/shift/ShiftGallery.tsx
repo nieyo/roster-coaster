@@ -1,30 +1,27 @@
 import {Card, Group, Stack, Text} from "@mantine/core";
 import ShiftCard from "./ShiftCard.tsx";
+import {Shift} from "../../types/types.ts";
 
-export default function ShiftGallery() {
+interface ShiftGalleryProps {
+    shifts: Shift[]
+}
+
+export default function ShiftGallery(props: ShiftGalleryProps) {
 
     return (
-        <Stack>
-            <Card>
-                <Text>Schicht 1</Text>
-                <Group>
-                    <ShiftCard/>
-                    <ShiftCard/>
-                    <ShiftCard/>
-                    <ShiftCard/>
-                    <ShiftCard/>
-                </Group>
-            </Card>
-            <Card>
-                <Text>Schicht 2</Text>
-                <Group>
-                    <ShiftCard/>
-                    <ShiftCard/>
-                    <ShiftCard/>
-                    <ShiftCard/>
-                    <ShiftCard/>
-                </Group>
-            </Card>
-        </Stack>
+        props.shifts && props.shifts.length > 0
+            ? <Stack>
+                <Card>
+                    <Text>Task 1</Text>
+                    <Group>
+                        {
+                            props.shifts.map((shift) => (
+                                <ShiftCard key={shift.id} shift={shift}/>
+                            ))
+                        }
+                    </Group>
+                </Card>
+            </Stack>
+            : <Text>Keine Schichten vorhanden</Text>
     )
 }

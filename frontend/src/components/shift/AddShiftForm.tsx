@@ -4,7 +4,11 @@ import React, {useState} from "react";
 import axios from 'axios';
 import {useNavigate} from "react-router-dom";
 
-export default function AddShiftForm() {
+interface AddShiftFormProps {
+    handleUpdate: () => void
+}
+
+export default function AddShiftForm(props: AddShiftFormProps) {
 
     const navigate = useNavigate();
 
@@ -19,6 +23,7 @@ export default function AddShiftForm() {
                 startTime: startTime,
                 endTime: endTime,
             });
+            props.handleUpdate()
             navigate('/'); // Navigate to the main page
         } catch (error) {
             console.error('Error adding shift:', error);
@@ -33,9 +38,9 @@ export default function AddShiftForm() {
         <Center>
             <Stack>
                 <DateTimePicker onChange={setStartTime}
-                                label="Beginn" placeholder="Pick date and time" />
+                                label="Beginn" placeholder="Pick date and time"/>
                 <DateTimePicker onChange={setEndTime}
-                                label="Ende" placeholder="Pick date and time" />
+                                label="Ende" placeholder="Pick date and time"/>
 
                 <Button
                     fullWidth
