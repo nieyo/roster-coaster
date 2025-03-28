@@ -39,7 +39,7 @@ class ShiftControllerTest {
                 {
                     "startTime": "2025-03-26T12:00:00Z",
                     "endTime": "2025-03-26T14:00:00Z",
-                    "participants": {}
+                    "participants": []
                 }
                 """;
 
@@ -53,7 +53,7 @@ class ShiftControllerTest {
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.startTime").value("2025-03-26T12:00:00Z"))
                 .andExpect(jsonPath("$.endTime").value("2025-03-26T14:00:00Z"))
-                .andExpect(jsonPath("$.participants").isMap())
+                .andExpect(jsonPath("$.participants").isArray())
                 .andExpect(jsonPath("$.participants").isEmpty());
 
         // Verify database state

@@ -5,6 +5,8 @@ import com.github.nieyo.repository.ShiftRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ShiftService {
@@ -32,5 +34,9 @@ public class ShiftService {
         if (shiftToValidate.startTime().isAfter(shiftToValidate.endTime())) {
             throw new IllegalArgumentException("Start must be before End");
         }
+    }
+
+    public List<Shift> getShifts() {
+        return shiftRepository.findAll();
     }
 }
