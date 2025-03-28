@@ -97,4 +97,20 @@ class ShiftServiceTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    void getShifts_whenNotEmpty_returnShiftList() {
+        // GIVEN
+        List<Shift> expected = List.of(
+                new Shift("1", startTime, endTime, participants),
+                new Shift("2", startTime, endTime, participants),
+                new Shift("3", startTime, endTime, participants)
+        );
+        when(shiftRepository.findAll()).thenReturn(expected);
+        // WHEN
+        List<Shift> actual = shiftService.getShifts();
+        // THEN
+        verify(shiftRepository).findAll();
+        assertEquals(expected, actual);
+    }
+
 }
