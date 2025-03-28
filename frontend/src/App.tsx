@@ -2,9 +2,9 @@ import "@mantine/core/styles.css";
 import '@mantine/dates/styles.css';
 
 import {Route, Routes} from "react-router-dom";
-import ShiftGallery from "./components/ShiftGallery.tsx";
-import Header from "./components/Header.tsx";
-import AddShiftForm from "./components/AddShiftForm.tsx";
+import ShiftGallery from "./components/shift/ShiftGallery.tsx";
+import Header from "./components/layout/Header.tsx";
+import AddShiftForm from "./components/shift/AddShiftForm.tsx";
 
 
 export default function App() {
