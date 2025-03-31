@@ -195,4 +195,13 @@ class ShiftControllerTest {
                 """));
     }
 
+    @Test
+    void getShiftById_whenNotFound_returnException() throws Exception {
+        // WHEN
+        mvc.perform(get("/api/shift/345")
+                        .contentType(MediaType.APPLICATION_JSON))
+                // THEN
+                .andExpect(status().isNotFound());
+    }
+
 }

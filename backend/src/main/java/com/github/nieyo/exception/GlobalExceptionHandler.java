@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.NoSuchElementException;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler
 {
@@ -22,6 +24,13 @@ public class GlobalExceptionHandler
     @ExceptionHandler(IllegalArgumentException.class)
     public ErrorMessage handleIllegalArgumentException(Exception ex) {
         return new ErrorMessage("Ein Fehler ist aufgetreten: " + ex.getMessage());
+    }
+
+    // ID does not exist
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NoSuchElementException.class)
+    public ErrorMessage handleNoSuchElementException(Exception ex) {
+        return new ErrorMessage(ex.getMessage());
     }
 
     // Default
