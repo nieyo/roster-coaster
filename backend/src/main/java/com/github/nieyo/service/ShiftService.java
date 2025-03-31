@@ -24,6 +24,7 @@ public class ShiftService {
         return shiftRepository.save(shiftToSave);
     }
 
+    // TODO: put this in an "ShiftValidation" class and refactor testing
     private void validateShift(Shift shiftToValidate) {
         if (shiftToValidate == null) {
             throw new IllegalArgumentException("Shift cannot be null");
@@ -47,8 +48,12 @@ public class ShiftService {
     }
 
     public Shift updateShift(String id, Shift shiftToUpdate) {
+        validateShift(shiftToUpdate);
         if (!shiftRepository.existsById(id)) {
-            throw new NoSuchElementException(String.format("No shift found with the id %s", id));
+            throw new NoSuchElementException(String.format("shift not found with the id %s", id));
+        }
+        if (!id.equals(shiftToUpdate.id())) {
+            throw new IllegalArgumentException("ID is not changeable");
         }
         return shiftRepository.save(shiftToUpdate);
     }
