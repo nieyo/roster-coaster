@@ -18,8 +18,7 @@ export default function ShiftCard(props: Readonly<ShiftCardProps>) {
         >
             <Group>
                 <Text>
-                    {props.shift.startTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})} -
-                    {props.shift.endTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}
+                    {props.shift.startTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}) + " - " + props.shift.endTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}
                 </Text>
                 <CloseButton onClick={() => props.handleDelete(props.shift.id)}/>
             </Group>
