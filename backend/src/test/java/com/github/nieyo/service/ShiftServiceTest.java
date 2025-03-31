@@ -175,8 +175,4 @@ class ShiftServiceTest {
         verify(shiftRepository, never()).deleteById(anyString());
         assertFalse(deleted);
     }
-
-
-
-
 }

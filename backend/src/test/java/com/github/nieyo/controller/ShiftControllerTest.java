@@ -224,4 +224,13 @@ class ShiftControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void deleteShift_whenNotFound_returnNotFound() throws Exception
+    {
+        // WHEN & THEN
+        mvc.perform(delete("/api/shift/does-not-exist")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
 }
