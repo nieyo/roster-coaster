@@ -9,26 +9,6 @@ const useShiftState = () => {
     const [shiftListError, setShiftListError] = useState<string | null>(null);
     const baseURL = "/api/shift";
 
-    const getShiftList = useCallback(() => {
-        setShiftListIsLoading(true);
-        axios.get(baseURL)
-            .then((response) => {
-                setShiftList(convertShift(response.data));
-                setShiftListError(null);
-            })
-            .catch((err) => {
-                setShiftListError('Failed to fetch shifts');
-                console.error(err);
-            })
-            .finally(() => {
-                setShiftListIsLoading(false);
-            });
-    }, []);
-
-    useEffect(() => {
-        getShiftList();
-    }, [getShiftList]);
-
     const convertShift = (rawShifts: Shift[]): Shift[] => {
         return rawShifts.map(shift => ({
             ...shift,
@@ -37,7 +17,33 @@ const useShiftState = () => {
         }));
     };
 
-    return {shiftList, shiftListIsLoading, shiftListError, getShiftList};
+    const getShiftList = useCallback(() => {
+        setShiftListIsLoading(true);
+        axios.get(baseURL)
+            .then((response) => {
+                setShiftList(convertShift(response.data));
+                setShiftListError(null);
+            })
+            .catch(() => setShiftListError('Failed to fetch shifts'))
+            .finally(() => setShiftListIsLoading(false));
+    }, []);
+
+    const deleteShift = (id: string) => {
+        axios.delete(`${baseURL}/${id}`)
+            .then(() => {
+                getShiftList()
+            })
+            .catch((error) => {
+                console.error("Error deleting movie:", error);
+                alert("Failed to delete the movie. Please try again.");
+            });
+    };
+
+    useEffect(() => {
+        getShiftList();
+    }, [getShiftList]);
+
+    return {shiftList, shiftListIsLoading, shiftListError, getShiftList, deleteShift};
 }
 
 export default useShiftState;

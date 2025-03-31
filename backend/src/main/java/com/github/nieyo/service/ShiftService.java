@@ -44,4 +44,13 @@ public class ShiftService {
     public Optional<Shift> getShiftById(String id) {
         return shiftRepository.findById(id);
     }
+
+    public boolean deleteShiftById(String id) {
+        if (shiftRepository.existsById(id)) {
+            shiftRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
