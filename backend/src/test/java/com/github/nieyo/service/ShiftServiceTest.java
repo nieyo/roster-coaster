@@ -129,6 +129,20 @@ class ShiftServiceTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    void getShiftById_whenIdDoesNotExists_returnEmptyOptional(){
+        // GIVEN
+        String nonExistingId = "idToSearchFor";
+        Optional<Shift> expected = Optional.empty();
+        when(shiftRepository.findById(nonExistingId)).thenReturn(expected);
+
+        // WHEN
+        Optional<Shift> actual = shiftService.getShiftById(nonExistingId);
+
+        // THEN
+        verify(shiftRepository).findById(nonExistingId);
+        assertEquals(expected, actual);
+    }
 
 
 }
