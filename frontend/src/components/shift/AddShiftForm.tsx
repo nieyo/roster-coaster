@@ -1,4 +1,4 @@
-import {Button, Center, Stack} from "@mantine/core";
+import {Button, Stack} from "@mantine/core";
 import {DateTimePicker, DateValue} from '@mantine/dates';
 import React, {useState} from "react";
 import axios from 'axios';
@@ -35,29 +35,26 @@ export default function AddShiftForm(props: Readonly<AddShiftFormProps>) {
     };
 
     return (
-        <Center>
-            <Stack>
-                <DateTimePicker onChange={setStartTime}
-                                label="Beginn" placeholder="Pick date and time"/>
-                <DateTimePicker onChange={setEndTime}
-                                label="Ende" placeholder="Pick date and time"/>
+        <Stack>
+            <DateTimePicker onChange={setStartTime}
+                            label="Beginn" placeholder="Pick date and time"/>
+            <DateTimePicker onChange={setEndTime}
+                            label="Ende" placeholder="Pick date and time"/>
 
-                <Button
-                    fullWidth
-                    color={"green"}
-                    onClick={handleSubmit}
-                >
-                    Schicht erstellen
-                </Button>
+            <Button
+                fullWidth
+                color={"green"}
+                onClick={handleSubmit}
+            >
+                Schicht erstellen
+            </Button>
 
-                <Button
-                    fullWidth
-                    onClick={handleCancel}
-                >
-                    Abbruch
-                </Button>
-            </Stack>
-        </Center>
-
+            <Button
+                fullWidth
+                onClick={handleCancel}
+            >
+                Abbruch
+            </Button>
+        </Stack>
     )
 }

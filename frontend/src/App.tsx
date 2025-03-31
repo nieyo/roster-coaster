@@ -6,21 +6,38 @@ import ShiftGallery from "./components/shift/ShiftGallery.tsx";
 import Header from "./components/layout/Header.tsx";
 import AddShiftForm from "./components/shift/AddShiftForm.tsx";
 import useShiftState from "./hooks/useShiftState.ts";
+import {Container, Space, Stack} from "@mantine/core";
 
 export default function App() {
 
-    const {shiftList, shiftListIsLoading, shiftListError, getShiftList} = useShiftState();
+    const {
+        shiftList,
+        shiftListIsLoading,
+        shiftListError,
+        getShiftList,
+        deleteShift
+    } = useShiftState();
 
     if (shiftListIsLoading) return <div>Loading...</div>;
     if (shiftListError) return <div>Error: {shiftListError}</div>;
 
     return (
-        <>
-            <Header/>
-            <Routes>
-                <Route path={"/"} element={<ShiftGallery shifts={shiftList}/>}/>
-                <Route path={"/add"} element={<AddShiftForm handleUpdate={getShiftList}/>}/>
-            </Routes>
-        </>
+        <Container>
+            <Stack>
+                <Space/>
+                <Header/>
+                <Routes>
+                    <Route path={"/"} element={
+                        <ShiftGallery
+                            shifts={shiftList}
+                            handleDelete={deleteShift}
+                        />
+                    }/>
+                    <Route path={"/add"} element={
+                        <AddShiftForm handleUpdate={getShiftList}/>
+                    }/>
+                </Routes>
+            </Stack>
+        </Container>
     )
 }
