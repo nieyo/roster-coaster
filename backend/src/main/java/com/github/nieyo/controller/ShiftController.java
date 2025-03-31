@@ -42,12 +42,12 @@ public class ShiftController {
     // INSERT UPDATE ENDPOINT HERE
 
     @DeleteMapping("{id}")
-    public void deleteMovieById(@PathVariable String id)
+    public void deleteShiftById(@PathVariable String id)
     {
         boolean isDeleted = shiftService.deleteShiftById(id);
         if (!isDeleted)
         {
-            throw new NoSuchElementException("Movie with ID: " + id + " not found");
+            throw new NoSuchElementException("Shift with ID: " + id + " not found");
         }
     }
 }

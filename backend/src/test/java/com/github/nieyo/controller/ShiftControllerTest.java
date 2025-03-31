@@ -145,7 +145,7 @@ class ShiftControllerTest {
     }
 
     @Test
-    void getMovies_whenFound_returnMovies() throws Exception {
+    void getShifts_whenFound_returnShifts() throws Exception {
         Shift shift1 = new Shift("1", startTime, endTime, participants);
         Shift shift2 = new Shift("2", startTime, endTime, participants);
 

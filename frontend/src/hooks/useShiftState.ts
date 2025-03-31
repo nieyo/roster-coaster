@@ -34,8 +34,8 @@ const useShiftState = () => {
                 getShiftList()
             })
             .catch((error) => {
-                console.error("Error deleting movie:", error);
-                alert("Failed to delete the movie. Please try again.");
+                console.error("Error deleting Shift:", error);
+                alert("Failed to delete. Please try again.");
             });
     };
 

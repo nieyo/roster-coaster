@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -43,6 +44,13 @@ public class ShiftService {
 
     public Optional<Shift> getShiftById(String id) {
         return shiftRepository.findById(id);
+    }
+
+    public Shift updateShift(String id, Shift shiftToUpdate) {
+        if (!shiftRepository.existsById(id)) {
+            throw new NoSuchElementException(String.format("No shift found with the id %s", id));
+        }
+        return shiftRepository.save(shiftToUpdate);
     }
 
     public boolean deleteShiftById(String id) {
