@@ -5,14 +5,14 @@ interface VolunteerGalleryProps {
     shift: Shift
 }
 
-export default function VolunteerGallery(props: VolunteerGalleryProps) {
+export default function VolunteerGallery(props: Readonly<VolunteerGalleryProps>) {
 
     return (
         <Stack>
             {
                 props.shift.volunteers
                     ? props.shift.volunteers.map((user) => (
-                        <Group>
+                        <Group key={props.shift.id}>
                             <Badge>{user.name}</Badge>
                             <CloseButton/>
                         </Group>

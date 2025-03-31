@@ -6,7 +6,7 @@ interface ShiftGalleryProps {
     shifts: Shift[]
 }
 
-export default function ShiftGallery(props: ShiftGalleryProps) {
+export default function ShiftGallery(props: Readonly<ShiftGalleryProps>) {
 
     return (
         props.shifts && props.shifts.length > 0

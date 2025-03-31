@@ -6,7 +6,7 @@ interface ShiftCardProps {
     shift: Shift
 }
 
-export default function ShiftCard(props: ShiftCardProps) {
+export default function ShiftCard(props: Readonly<ShiftCardProps>) {
 
     return (
             <Card>

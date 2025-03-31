@@ -4,22 +4,22 @@ import {Shift} from "../types/types.ts";
 
 const useShiftState = () => {
     const [shifts, setShifts] = useState<Shift[]>([]);
-    const [shiftsIsLoading, setLoading] = useState<boolean>(true);
-    const [shiftsError, setError] = useState<string | null>(null);
+    const [shiftsIsLoading, setShiftsIsLoading] = useState<boolean>(true);
+    const [shiftsError, setShiftsError] = useState<string | null>(null);
 
     const baseURL = "/api/shift";
 
     const getShifts = async () => {
         try {
-            setLoading(true);
+            setShiftsIsLoading(true);
             const response = await axios.get(baseURL);
             setShifts(convertShift(response.data));
-            setError(null);
+            setShiftsError(null);
         } catch (err) {
-            setError('Failed to fetch shifts');
+            setShiftsError('Failed to fetch shifts');
             console.error(err);
         } finally {
-            setLoading(false);
+            setShiftsIsLoading(false);
         }
     };
 

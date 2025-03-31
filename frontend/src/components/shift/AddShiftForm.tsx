@@ -8,7 +8,7 @@ interface AddShiftFormProps {
     handleUpdate: () => void
 }
 
-export default function AddShiftForm(props: AddShiftFormProps) {
+export default function AddShiftForm(props: Readonly<AddShiftFormProps>) {
 
     const navigate = useNavigate();
 
