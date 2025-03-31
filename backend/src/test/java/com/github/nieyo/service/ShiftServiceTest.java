@@ -6,7 +6,7 @@ import com.github.nieyo.repository.ShiftRepository;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
-import java.util.Map;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -20,14 +20,14 @@ class ShiftServiceTest {
 
     Instant startTime = Instant.parse("2025-03-26T12:00:00Z");
     Instant endTime = Instant.parse("2025-03-26T14:00:00Z");
-    Map<String, User> participants = Map.of();
+    List<User> participants = List.of();
 
-
+    // CREATE
     @Test
     void saveShift_ShouldPersistNewEntity() {
 
         // GIVEN
-        Shift inputShift = new Shift(null, startTime, endTime, Map.of());
+        Shift inputShift = new Shift(null, startTime, endTime, List.of());
 
         String expectedId = "generated-id";
         when(idService.randomId()).thenReturn(expectedId);
@@ -59,8 +59,8 @@ class ShiftServiceTest {
 
     @Test
     void saveShift_ShouldThrowException_WhenRequiredFieldIsNull() {
-        Shift invalidShiftNoStart = new Shift(null, null, Instant.now(), Map.of());
-        Shift invalidShiftNoEnd = new Shift(null, startTime, null, Map.of());
+        Shift invalidShiftNoStart = new Shift(null, null, Instant.now(), List.of());
+        Shift invalidShiftNoEnd = new Shift(null, startTime, null, List.of());
 
         assertThrows(IllegalArgumentException.class, () -> shiftService.saveShift(invalidShiftNoStart));
         assertThrows(IllegalArgumentException.class, () -> shiftService.saveShift(invalidShiftNoEnd));
@@ -75,13 +75,42 @@ class ShiftServiceTest {
                 null,
                 endTime,
                 startTime, // wrong order
-                Map.of()
+                List.of()
         );
 
         assertThrows(IllegalArgumentException.class, () -> shiftService.saveShift(invalidShift));
 
         // Verify repository was never called
         verify(shiftRepository, never()).save(any());
+    }
+
+    // READ ALL
+    @Test
+    void getShifts_whenEmpty_returnEmptyList() {
+        // GIVEN
+        List<Shift> expected = List.of();
+        when(shiftRepository.findAll()).thenReturn(expected);
+        // WHEN
+        List<Shift> actual = shiftService.getShifts();
+        // THEN
+        verify(shiftRepository).findAll();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void getShifts_whenNotEmpty_returnShiftList() {
+        // GIVEN
+        List<Shift> expected = List.of(
+                new Shift("1", startTime, endTime, participants),
+                new Shift("2", startTime, endTime, participants),
+                new Shift("3", startTime, endTime, participants)
+        );
+        when(shiftRepository.findAll()).thenReturn(expected);
+        // WHEN
+        List<Shift> actual = shiftService.getShifts();
+        // THEN
+        verify(shiftRepository).findAll();
+        assertEquals(expected, actual);
     }
 
 }

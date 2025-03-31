@@ -3,12 +3,12 @@ package com.github.nieyo.model;
 import org.springframework.data.annotation.Id;
 
 import java.time.Instant;
-import java.util.Map;
+import java.util.List;
 
 public record Shift(
         @Id String id,
         Instant startTime,
         Instant endTime,
-        Map<String, User> participants
+        List<User> participants
 ) {
 }
