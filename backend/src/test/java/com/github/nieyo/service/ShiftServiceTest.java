@@ -162,5 +162,21 @@ class ShiftServiceTest {
         assertTrue(deleted);
     }
 
+    @Test
+    void deleteShift_whenNotFound_returnFalse()
+    {
+        // GIVEN
+        when(shiftRepository.existsById("1")).thenReturn(false);
+
+        // WHEN
+        boolean deleted = shiftService.deleteShiftById("1");
+
+        // THEN
+        verify(shiftRepository, never()).deleteById(anyString());
+        assertFalse(deleted);
+    }
+
+
+
 
 }
