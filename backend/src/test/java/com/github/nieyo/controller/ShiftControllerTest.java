@@ -9,14 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.Instant;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -175,6 +175,8 @@ class ShiftControllerTest {
                """));
     }
 
+    // GET BY ID
+
     @Test
     void getShiftById_whenIdExists_returnShift() throws Exception {
         String existingId = "34";
@@ -202,6 +204,24 @@ class ShiftControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 // THEN
                 .andExpect(status().isNotFound());
+    }
+
+    // UPDATE
+
+    // DELETE
+
+    @Test
+    @DirtiesContext
+    void deleteShift_whenFound_removesShift() throws Exception
+    {
+        // GIVEN
+        Shift shiftToDelete = new Shift("1", startTime, endTime, participants);
+        shiftRepository.save(shiftToDelete);
+
+        // WHEN & THEN
+        mvc.perform(delete("/api/shift/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
 }
