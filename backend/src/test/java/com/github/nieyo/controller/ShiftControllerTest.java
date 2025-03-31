@@ -174,4 +174,34 @@ class ShiftControllerTest {
                 ]
                """));
     }
+
+    @Test
+    void getShiftById_whenIdExists_returnShift() throws Exception {
+        String existingId = "34";
+        Shift expected = new Shift(existingId, startTime, endTime, participants);
+        shiftRepository.save(expected);
+        // WHEN
+        mvc.perform(get("/api/shift/34")
+                        .contentType(MediaType.APPLICATION_JSON))
+                // THEN
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                  {
+                    "id": "34",
+                    "startTime": "2025-03-26T12:00:00Z",
+                    "endTime": "2025-03-26T14:00:00Z",
+                    "participants": []
+                  }
+                """));
+    }
+
+    @Test
+    void getShiftById_whenNotFound_returnException() throws Exception {
+        // WHEN
+        mvc.perform(get("/api/shift/345")
+                        .contentType(MediaType.APPLICATION_JSON))
+                // THEN
+                .andExpect(status().isNotFound());
+    }
+
 }

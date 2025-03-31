@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -112,5 +113,36 @@ class ShiftServiceTest {
         verify(shiftRepository).findAll();
         assertEquals(expected, actual);
     }
+
+    @Test
+    void getShiftById_whenIdExists_returnShift(){
+        // GIVEN
+        String existingId = "idToSearchFor";
+        Optional<Shift> expected = Optional.of(new Shift(existingId, startTime, endTime, participants));
+        when(shiftRepository.findById(existingId)).thenReturn(expected);
+
+        // WHEN
+        Optional<Shift> actual = shiftService.getShiftById(existingId);
+
+        // THEN
+        verify(shiftRepository).findById(existingId);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void getShiftById_whenIdDoesNotExists_returnEmptyOptional(){
+        // GIVEN
+        String nonExistingId = "idToSearchFor";
+        Optional<Shift> expected = Optional.empty();
+        when(shiftRepository.findById(nonExistingId)).thenReturn(expected);
+
+        // WHEN
+        Optional<Shift> actual = shiftService.getShiftById(nonExistingId);
+
+        // THEN
+        verify(shiftRepository).findById(nonExistingId);
+        assertEquals(expected, actual);
+    }
+
 
 }
