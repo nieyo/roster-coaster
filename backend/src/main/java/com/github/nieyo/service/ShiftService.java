@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,5 +39,9 @@ public class ShiftService {
 
     public List<Shift> getShifts() {
         return shiftRepository.findAll();
+    }
+
+    public Optional<Shift> getShiftById(String id) {
+        return shiftRepository.findById(id);
     }
 }
