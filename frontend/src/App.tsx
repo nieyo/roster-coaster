@@ -15,7 +15,8 @@ export default function App() {
         shiftListIsLoading,
         shiftListError,
         getShiftList,
-        deleteShift
+        deleteShift,
+        updateShift
     } = useShiftState();
 
     if (shiftListIsLoading) return <div>Loading...</div>;
@@ -31,8 +32,10 @@ export default function App() {
                         <ShiftGallery
                             shifts={shiftList}
                             handleDelete={deleteShift}
+                            handleUpdate={updateShift}
                         />
                     }/>
+
                     <Route path={"/add"} element={
                         <AddShiftForm handleUpdate={getShiftList}/>
                     }/>

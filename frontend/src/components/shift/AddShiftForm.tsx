@@ -15,13 +15,15 @@ export default function AddShiftForm(props: Readonly<AddShiftFormProps>) {
     const [startTime, setStartTime] = useState<DateValue>();
     const [endTime, setEndTime] = useState<DateValue>();
 
+    // TODO refactor, use hook -> useShiftState
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         try {
             const baseURL = "/api/shift";
-            await axios.post(baseURL, { //POST request
+            await axios.post(baseURL, {
                 startTime: startTime,
                 endTime: endTime,
+                participants: []
             });
             props.handleUpdate()
             navigate('/'); // Navigate to the main page
