@@ -235,12 +235,31 @@ class ShiftControllerTest {
                             "endTime": "2025-03-26T14:00:00Z",
                             "participants": [{"name": "Alan"}]
                           }
-                        """));
+                        """)
+                );
     }
 
+    @Test
+    void updateShift_whenNotFound_throwNoSuchElementException() throws Exception {
+        // GIVEN
+        String id = "doesNotExist";
 
-
-
+        // WHEN
+        mvc.perform(put("/api/shift/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                "id": "doesNotExist",
+                                "startTime": "2025-03-26T12:00:00Z",
+                                "endTime": "2025-03-26T14:00:00Z",
+                                "participants": [{"name": "Alan"}]
+                                }
+                                """)
+                )
+                // THEN
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorMessage").value("shift not found with the id " + id));
+    }
 
 
     // DELETE
