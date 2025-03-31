@@ -175,10 +175,11 @@ class ShiftServiceTest {
 
         // WHEN + THEN
         assertThrows(NoSuchElementException.class, () -> shiftService.updateShift(targetId, updatedShift));
+        verify(shiftRepository, never()).save(any());
     }
 
     @Test
-    void updateShift_whenFound_throwIllegalArgumentException() {
+    void updateShift_whenIdDoesNotMatch_throwIllegalArgumentException() {
         // GIVEN
         String targetId = "3";
         Shift updatedShift = new Shift("notMatchingId", startTime, endTime, participants);
@@ -187,6 +188,7 @@ class ShiftServiceTest {
 
         // WHEN + THEN
         assertThrows(IllegalArgumentException.class, () -> shiftService.updateShift(targetId, updatedShift));
+        verify(shiftRepository, never()).save(any());
     }
 
     // DELETE
