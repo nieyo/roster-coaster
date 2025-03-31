@@ -1,42 +1,43 @@
-import {useState, useEffect} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import axios from 'axios';
 import {Shift} from "../types/types.ts";
 
-const useShiftState = () => {
-    const [shifts, setShifts] = useState<Shift[]>([]);
-    const [shiftsIsLoading, setShiftsIsLoading] = useState<boolean>(true);
-    const [shiftsError, setShiftsError] = useState<string | null>(null);
 
+const useShiftState = () => {
+    const [shiftList, setShiftList] = useState<Shift[]>([]);
+    const [shiftListIsLoading, setShiftListIsLoading] = useState<boolean>(true);
+    const [shiftListError, setShiftListError] = useState<string | null>(null);
     const baseURL = "/api/shift";
 
-    const getShifts = async () => {
-        try {
-            setShiftsIsLoading(true);
-            const response = await axios.get(baseURL);
-            setShifts(convertShift(response.data));
-            setShiftsError(null);
-        } catch (err) {
-            setShiftsError('Failed to fetch shifts');
-            console.error(err);
-        } finally {
-            setShiftsIsLoading(false);
-        }
-    };
+    const getShiftList = useCallback(() => {
+        setShiftListIsLoading(true);
+        axios.get(baseURL)
+            .then((response) => {
+                setShiftList(convertShift(response.data));
+                setShiftListError(null);
+            })
+            .catch((err) => {
+                setShiftListError('Failed to fetch shifts');
+                console.error(err);
+            })
+            .finally(() => {
+                setShiftListIsLoading(false);
+            });
+    }, []);
+
+    useEffect(() => {
+        getShiftList();
+    }, [getShiftList]);
 
     const convertShift = (rawShifts: Shift[]): Shift[] => {
-        return rawShifts.map(shift => {
-            shift.startTime = new Date(shift.startTime)
-            shift.endTime = new Date(shift.endTime)
-            return shift
-        })
-    }
+        return rawShifts.map(shift => ({
+            ...shift,
+            startTime: new Date(shift.startTime),
+            endTime: new Date(shift.endTime),
+        }));
+    };
 
-    // TODO: refactor and fix whatever the problem is
-    useEffect(() => {
-        getShifts()
-    }, [])
-
-    return {shifts, shiftsIsLoading, shiftsError, getShifts};
-};
+    return {shiftList, shiftListIsLoading, shiftListError, getShiftList};
+}
 
 export default useShiftState;
