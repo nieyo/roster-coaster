@@ -261,6 +261,30 @@ class ShiftControllerTest {
                 .andExpect(jsonPath("$.errorMessage").value("shift not found with the id " + id));
     }
 
+    @Test
+    @DirtiesContext
+    void updateShift_whenIdDoesNotMatch_throwIllegalArgumentException() throws Exception {
+        // GIVEN
+        Shift shift = new Shift("1", startTime, endTime, participants);
+        shiftRepository.save(shift);
+        // WHEN
+        mvc.perform(put("/api/shift/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                """
+                                  {
+                                    "id": "2",
+                                    "startTime": "2025-03-26T12:00:00Z",
+                                    "endTime": "2025-03-26T14:00:00Z",
+                                    "participants": [{"name": "Alan"}]
+                                  }
+                                """
+                        )
+                )
+                // THEN
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorMessage").value("Ein Fehler ist aufgetreten: ID is not changeable"));
+    }
 
     // DELETE
 
