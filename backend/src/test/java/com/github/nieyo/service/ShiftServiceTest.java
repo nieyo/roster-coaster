@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -166,7 +167,15 @@ class ShiftServiceTest {
         assertEquals(expected.participants(), actual.participants());
     }
 
+    @Test
+    void updateShift_whenNotFound_throwNoSuchElementException() {
+        String targetId = "3";
+        Shift updatedShift = new Shift(targetId, startTime, endTime, participants);
+        when(shiftRepository.existsById(targetId)).thenReturn(false);
 
+        // WHEN + THEN
+        assertThrows(NoSuchElementException.class, () -> shiftService.updateShift(targetId, updatedShift));
+    }
 
     // DELETE
     @Test
