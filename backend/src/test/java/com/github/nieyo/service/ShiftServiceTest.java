@@ -85,7 +85,7 @@ class ShiftServiceTest {
         verify(shiftRepository, never()).save(any());
     }
 
-    // READ ALL
+    // GET ALL
     @Test
     void getShifts_whenEmpty_returnEmptyList() {
         // GIVEN
@@ -114,6 +114,7 @@ class ShiftServiceTest {
         assertEquals(expected, actual);
     }
 
+    // GET BY ID
     @Test
     void getShiftById_whenIdExists_returnShift(){
         // GIVEN
@@ -142,6 +143,23 @@ class ShiftServiceTest {
         // THEN
         verify(shiftRepository).findById(nonExistingId);
         assertEquals(expected, actual);
+    }
+
+    // UPDATE
+
+    // DELETE
+    @Test
+    void deleteShift_whenFound_deleteShift()
+    {
+        // GIVEN
+        when(shiftRepository.existsById("1")).thenReturn(true);
+
+        // WHEN
+        boolean deleted = shiftService.deleteShiftById("1");
+
+        // THEN
+        verify(shiftRepository).deleteById("1");
+        assertTrue(deleted);
     }
 
 
