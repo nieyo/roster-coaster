@@ -1,4 +1,4 @@
-import {ActionIcon, Badge, Group, Stack, TextInput} from "@mantine/core";
+import {ActionIcon, Group, Pill, Stack, TextInput} from "@mantine/core";
 import {Shift, User} from "../../types/types.ts";
 import {ChangeEvent, useState} from "react";
 import {IconCheck} from "@tabler/icons-react";
@@ -33,21 +33,24 @@ export default function VolunteerGallery(props: Readonly<VolunteerGalleryProps>)
         setName("");
     };
 
+    const pills = props.shift.participants
+        .map((user, index) => (
+            <Pill key={index}>
+                {user.name}
+            </Pill>
+        ));
+
     return (
         <Stack>
             <Group>
                 {
                     props.shift.participants && props.shift.participants.length > 0
-                        ? props.shift.participants.map((user) => (
-                            <Badge key={user.name}>
-                                {user.name}
-                            </Badge>
-                        ))
-                        : <Badge>
-                            Keine Helfer
-                    </Badge>
+                        ? <Pill.Group>{pills}</Pill.Group>
+                        : <Pill>Keine Helfer</Pill>
                 }
             </Group>
+
+            {/*TODO prevent duplicate inputs and maybe use something different than user.name as id in ShiftGallery*/}
             <Group>
                 <TextInput
                     size={"xs"}
@@ -61,8 +64,6 @@ export default function VolunteerGallery(props: Readonly<VolunteerGalleryProps>)
                     <IconCheck size={"12"}/>
                 </ActionIcon>
             </Group>
-
-
         </Stack>
     )
 }

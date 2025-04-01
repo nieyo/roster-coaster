@@ -26,11 +26,10 @@ export default function ShiftCard(props: Readonly<ShiftCardProps>) {
                     {props.shift.startTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}) + " - " + props.shift.endTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}
                 </Text>
 
-                {/*TODO create edit shift functionality*/}
                 <ActionIcon size={"md"} variant="transparent"
-                            onClick={() => navigate("/add")}
+                            onClick={() => navigate(`/edit/${props.shift.id}`, { state: { shift: props.shift } })}
                 >
-                    <IconPencil size={"18"}/>
+                    <IconPencil size={"16"} color={"lightgrey"}/>
                 </ActionIcon>
                 <CloseButton onClick={() => props.handleDelete(props.shift.id)}/>
 

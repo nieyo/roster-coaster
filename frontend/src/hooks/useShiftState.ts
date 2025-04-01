@@ -58,11 +58,25 @@ const useShiftState = () => {
             })
     };
 
+    const saveShift = (shiftToSave: Shift) => {
+        setShiftListIsLoading(true)
+        axios.post(baseURL, shiftToSave)
+            .then(() => {
+                getShiftList()
+            })
+            .catch((error) => {
+                setShiftListError(error.message);
+            })
+            .finally(() => {
+                setShiftListIsLoading(false)
+            })
+    };
+
     useEffect(() => {
         getShiftList();
     }, [getShiftList]);
 
-    return {shiftList, shiftListIsLoading, shiftListError, getShiftList, deleteShift, updateShift};
+    return {shiftList, shiftListIsLoading, shiftListError, getShiftList, deleteShift, updateShift, saveShift};
 }
 
 export default useShiftState;
