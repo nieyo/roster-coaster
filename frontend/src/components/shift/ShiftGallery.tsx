@@ -15,7 +15,7 @@ export default function ShiftGallery(props: Readonly<ShiftGalleryProps>) {
             ? <Stack>
                 <Card>
                     <Group>
-                        <Text>Essensausgabe</Text>
+                        <Text>Essensausgabe | 17. März</Text>
                     </Group>
                     <Space h="md" />
                     <Group>

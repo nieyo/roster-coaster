@@ -43,6 +43,7 @@ export default function ShiftForm(props: Readonly<AddShiftFormProps>) {
 
     return (
         <Stack>
+            {/*TODO change to Time only as it is only on one day, provided by Event*/}
             <DateTimePicker
                 withAsterisk
                 onChange={setStartTime}
