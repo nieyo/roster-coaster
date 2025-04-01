@@ -5,6 +5,7 @@ import {Shift} from "../../types/types.ts";
 interface ShiftGalleryProps {
     shifts: Shift[],
     handleDelete: (id: string) => void
+    handleUpdate: (id: string, shiftToSave: Shift) => void
 }
 
 export default function ShiftGallery(props: Readonly<ShiftGalleryProps>) {
@@ -14,7 +15,7 @@ export default function ShiftGallery(props: Readonly<ShiftGalleryProps>) {
             ? <Stack>
                 <Card>
                     <Group>
-                        <Text>Essensausgabe</Text>
+                        <Text>Essensausgabe | 17. März</Text>
                     </Group>
                     <Space h="md" />
                     <Group>
@@ -24,6 +25,7 @@ export default function ShiftGallery(props: Readonly<ShiftGalleryProps>) {
                                     key={shift.id}
                                     shift={shift}
                                     handleDelete={props.handleDelete}
+                                    handleUpdate={props.handleUpdate}
                                 />
                             ))
                         }

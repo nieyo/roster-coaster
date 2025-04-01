@@ -4,7 +4,7 @@ import '@mantine/dates/styles.css';
 import {Route, Routes} from "react-router-dom";
 import ShiftGallery from "./components/shift/ShiftGallery.tsx";
 import Header from "./components/layout/Header.tsx";
-import AddShiftForm from "./components/shift/AddShiftForm.tsx";
+import ShiftForm from "./components/shift/ShiftForm.tsx";
 import useShiftState from "./hooks/useShiftState.ts";
 import {Container, Space, Stack} from "@mantine/core";
 
@@ -12,13 +12,12 @@ export default function App() {
 
     const {
         shiftList,
-        shiftListIsLoading,
         shiftListError,
-        getShiftList,
+        saveShift,
+        updateShift,
         deleteShift
     } = useShiftState();
 
-    if (shiftListIsLoading) return <div>Loading...</div>;
     if (shiftListError) return <div>Error: {shiftListError}</div>;
 
     return (
@@ -31,10 +30,22 @@ export default function App() {
                         <ShiftGallery
                             shifts={shiftList}
                             handleDelete={deleteShift}
+                            handleUpdate={updateShift}
                         />
                     }/>
+
                     <Route path={"/add"} element={
-                        <AddShiftForm handleUpdate={getShiftList}/>
+                        <ShiftForm
+                            handleSave={saveShift}
+                            handleUpdate={() => {}}
+                        />
+                    }/>
+
+                    <Route path={"/edit/:id"} element={
+                        <ShiftForm
+                            handleSave={() => {}}
+                            handleUpdate={updateShift}
+                        />
                     }/>
                 </Routes>
             </Stack>

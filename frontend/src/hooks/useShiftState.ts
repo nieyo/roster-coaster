@@ -14,6 +14,7 @@ const useShiftState = () => {
             ...shift,
             startTime: new Date(shift.startTime),
             endTime: new Date(shift.endTime),
+            // participants: [...(shift.participants || [])]
         }));
     };
 
@@ -29,21 +30,53 @@ const useShiftState = () => {
     }, []);
 
     const deleteShift = (id: string) => {
+        setShiftListIsLoading(true)
         axios.delete(`${baseURL}/${id}`)
             .then(() => {
                 getShiftList()
             })
             .catch((error) => {
-                console.error("Error deleting movie:", error);
-                alert("Failed to delete the movie. Please try again.");
-            });
+                console.error("Error deleting Shift:", error);
+                alert("Failed to delete. Please try again.");
+            })
+            .finally(() =>
+                setShiftListIsLoading(false)
+            )
+    };
+
+    const updateShift = (id: string, shiftToUpdate: Shift) => {
+        setShiftListIsLoading(true)
+        axios.put(`${baseURL}/${id}`, shiftToUpdate)
+            .then(() => {
+                getShiftList()
+            })
+            .catch((error) => {
+                setShiftListError(error.message);
+            })
+            .finally(() => {
+                setShiftListIsLoading(false)
+            })
+    };
+
+    const saveShift = (shiftToSave: Shift) => {
+        setShiftListIsLoading(true)
+        axios.post(baseURL, shiftToSave)
+            .then(() => {
+                getShiftList()
+            })
+            .catch((error) => {
+                setShiftListError(error.message);
+            })
+            .finally(() => {
+                setShiftListIsLoading(false)
+            })
     };
 
     useEffect(() => {
         getShiftList();
     }, [getShiftList]);
 
-    return {shiftList, shiftListIsLoading, shiftListError, getShiftList, deleteShift};
+    return {shiftList, shiftListIsLoading, shiftListError, getShiftList, deleteShift, updateShift, saveShift};
 }
 
 export default useShiftState;

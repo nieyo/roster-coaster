@@ -140,12 +140,12 @@ class ShiftControllerTest {
                 // THEN
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
-                  []
-                """));
+                          []
+                        """));
     }
 
     @Test
-    void getMovies_whenFound_returnMovies() throws Exception {
+    void getShifts_whenFound_returnShifts() throws Exception {
         Shift shift1 = new Shift("1", startTime, endTime, participants);
         Shift shift2 = new Shift("2", startTime, endTime, participants);
 
@@ -158,21 +158,21 @@ class ShiftControllerTest {
                 // THEN
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
-                [
-                  {
-                    "id": "1",
-                    "startTime": "2025-03-26T12:00:00Z",
-                    "endTime": "2025-03-26T14:00:00Z",
-                    "participants": []
-                  },
-                  {
-                    "id": "2",
-                    "startTime": "2025-03-26T12:00:00Z",
-                    "endTime": "2025-03-26T14:00:00Z",
-                    "participants": []
-                  }
-                ]
-               """));
+                         [
+                           {
+                             "id": "1",
+                             "startTime": "2025-03-26T12:00:00Z",
+                             "endTime": "2025-03-26T14:00:00Z",
+                             "participants": []
+                           },
+                           {
+                             "id": "2",
+                             "startTime": "2025-03-26T12:00:00Z",
+                             "endTime": "2025-03-26T14:00:00Z",
+                             "participants": []
+                           }
+                         ]
+                        """));
     }
 
     // GET BY ID
@@ -188,13 +188,13 @@ class ShiftControllerTest {
                 // THEN
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
-                  {
-                    "id": "34",
-                    "startTime": "2025-03-26T12:00:00Z",
-                    "endTime": "2025-03-26T14:00:00Z",
-                    "participants": []
-                  }
-                """));
+                          {
+                            "id": "34",
+                            "startTime": "2025-03-26T12:00:00Z",
+                            "endTime": "2025-03-26T14:00:00Z",
+                            "participants": []
+                          }
+                        """));
     }
 
     @Test
@@ -208,12 +208,89 @@ class ShiftControllerTest {
 
     // UPDATE
 
+    @Test
+    @DirtiesContext
+    void updateShift_whenFound_returnShift() throws Exception {
+        // GIVEN
+        Shift shift = new Shift("1", startTime, endTime, participants);
+        shiftRepository.save(shift);
+        // WHEN
+        mvc.perform(put("/api/shift/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                    {
+                                      "id": "1",
+                                      "startTime": "2025-03-26T12:00:00Z",
+                                      "endTime": "2025-03-26T14:00:00Z",
+                                      "participants": [{"name": "Alan"}]
+                                    }
+                                """)
+                )
+                // THEN
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                          {
+                            "id": "1",
+                            "startTime": "2025-03-26T12:00:00Z",
+                            "endTime": "2025-03-26T14:00:00Z",
+                            "participants": [{"name": "Alan"}]
+                          }
+                        """)
+                );
+    }
+
+    @Test
+    void updateShift_whenNotFound_throwNoSuchElementException() throws Exception {
+        // GIVEN
+        String id = "doesNotExist";
+
+        // WHEN
+        mvc.perform(put("/api/shift/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                "id": "doesNotExist",
+                                "startTime": "2025-03-26T12:00:00Z",
+                                "endTime": "2025-03-26T14:00:00Z",
+                                "participants": [{"name": "Alan"}]
+                                }
+                                """)
+                )
+                // THEN
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorMessage").value("shift not found with the id " + id));
+    }
+
+    @Test
+    @DirtiesContext
+    void updateShift_whenIdDoesNotMatch_throwIllegalArgumentException() throws Exception {
+        // GIVEN
+        Shift shift = new Shift("1", startTime, endTime, participants);
+        shiftRepository.save(shift);
+        // WHEN
+        mvc.perform(put("/api/shift/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                """
+                                  {
+                                    "id": "2",
+                                    "startTime": "2025-03-26T12:00:00Z",
+                                    "endTime": "2025-03-26T14:00:00Z",
+                                    "participants": [{"name": "Alan"}]
+                                  }
+                                """
+                        )
+                )
+                // THEN
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorMessage").value("Ein Fehler ist aufgetreten: ID is not changeable"));
+    }
+
     // DELETE
 
     @Test
     @DirtiesContext
-    void deleteShift_whenFound_removesShift() throws Exception
-    {
+    void deleteShift_whenFound_removesShift() throws Exception {
         // GIVEN
         Shift shiftToDelete = new Shift("1", startTime, endTime, participants);
         shiftRepository.save(shiftToDelete);
@@ -225,8 +302,7 @@ class ShiftControllerTest {
     }
 
     @Test
-    void deleteShift_whenNotFound_returnNotFound() throws Exception
-    {
+    void deleteShift_whenNotFound_returnNotFound() throws Exception {
         // WHEN & THEN
         mvc.perform(delete("/api/shift/does-not-exist")
                         .contentType(MediaType.APPLICATION_JSON))

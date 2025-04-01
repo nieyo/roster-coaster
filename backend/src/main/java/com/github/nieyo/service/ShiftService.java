@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -23,6 +24,7 @@ public class ShiftService {
         return shiftRepository.save(shiftToSave);
     }
 
+    // TODO: put this in an "ShiftValidation" class and refactor testing
     private void validateShift(Shift shiftToValidate) {
         if (shiftToValidate == null) {
             throw new IllegalArgumentException("Shift cannot be null");
@@ -43,6 +45,17 @@ public class ShiftService {
 
     public Optional<Shift> getShiftById(String id) {
         return shiftRepository.findById(id);
+    }
+
+    public Shift updateShift(String id, Shift shiftToUpdate) {
+        validateShift(shiftToUpdate);
+        if (!shiftRepository.existsById(id)) {
+            throw new NoSuchElementException(String.format("shift not found with the id %s", id));
+        }
+        if (!id.equals(shiftToUpdate.id())) {
+            throw new IllegalArgumentException("ID is not changeable");
+        }
+        return shiftRepository.save(shiftToUpdate);
     }
 
     public boolean deleteShiftById(String id) {

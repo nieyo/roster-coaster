@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -116,7 +117,7 @@ class ShiftServiceTest {
 
     // GET BY ID
     @Test
-    void getShiftById_whenIdExists_returnShift(){
+    void getShiftById_whenIdExists_returnShift() {
         // GIVEN
         String existingId = "idToSearchFor";
         Optional<Shift> expected = Optional.of(new Shift(existingId, startTime, endTime, participants));
@@ -131,7 +132,7 @@ class ShiftServiceTest {
     }
 
     @Test
-    void getShiftById_whenIdDoesNotExists_returnEmptyOptional(){
+    void getShiftById_whenIdDoesNotExists_returnEmptyOptional() {
         // GIVEN
         String nonExistingId = "idToSearchFor";
         Optional<Shift> expected = Optional.empty();
@@ -146,11 +147,53 @@ class ShiftServiceTest {
     }
 
     // UPDATE
+    @Test
+    void updateShift_whenFound_returnShift() {
+        // GIVEN
+        String targetId = "2";
+        Shift expected = new Shift("2", startTime, endTime.plusSeconds(3600), participants);
+        when(shiftRepository.existsById(targetId)).thenReturn(true);
+        when(shiftRepository.save(expected)).thenReturn(expected);
+
+        // WHEN
+        Shift actual = shiftService.updateShift(targetId, expected);
+
+        // THEN
+        verify(shiftRepository).existsById(targetId);
+        verify(shiftRepository).save(expected);
+        assertEquals(expected.id(), actual.id());
+        assertEquals(expected.startTime(), actual.startTime());
+        assertEquals(expected.endTime(), actual.endTime());
+        assertEquals(expected.participants(), actual.participants());
+    }
+
+    @Test
+    void updateShift_whenNotFound_throwNoSuchElementException() {
+        String targetId = "3";
+        Shift updatedShift = new Shift(targetId, startTime, endTime, participants);
+        when(shiftRepository.existsById(targetId)).thenReturn(false);
+
+        // WHEN + THEN
+        assertThrows(NoSuchElementException.class, () -> shiftService.updateShift(targetId, updatedShift));
+        verify(shiftRepository, never()).save(any());
+    }
+
+    @Test
+    void updateShift_whenIdDoesNotMatch_throwIllegalArgumentException() {
+        // GIVEN
+        String targetId = "3";
+        Shift updatedShift = new Shift("notMatchingId", startTime, endTime, participants);
+        when(shiftRepository.existsById(targetId)).thenReturn(true);
+        when(shiftRepository.save(updatedShift)).thenReturn(updatedShift);
+
+        // WHEN + THEN
+        assertThrows(IllegalArgumentException.class, () -> shiftService.updateShift(targetId, updatedShift));
+        verify(shiftRepository, never()).save(any());
+    }
 
     // DELETE
     @Test
-    void deleteShift_whenFound_deleteShift()
-    {
+    void deleteShift_whenFound_deleteShift() {
         // GIVEN
         when(shiftRepository.existsById("1")).thenReturn(true);
 
@@ -163,8 +206,7 @@ class ShiftServiceTest {
     }
 
     @Test
-    void deleteShift_whenNotFound_returnFalse()
-    {
+    void deleteShift_whenNotFound_returnFalse() {
         // GIVEN
         when(shiftRepository.existsById("1")).thenReturn(false);
 

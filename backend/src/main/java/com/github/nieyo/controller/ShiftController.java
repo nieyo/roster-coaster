@@ -39,15 +39,18 @@ public class ShiftController {
         throw new NoSuchElementException("Shift with ID: "+ id + " not found");
     }
 
-    // INSERT UPDATE ENDPOINT HERE
+    @PutMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Shift updateShift(@PathVariable String id, @RequestBody Shift shiftToUpdate) {
+        return shiftService.updateShift(id, shiftToUpdate);
+    }
 
     @DeleteMapping("{id}")
-    public void deleteMovieById(@PathVariable String id)
-    {
+    public void deleteShiftById(@PathVariable String id) {
         boolean isDeleted = shiftService.deleteShiftById(id);
         if (!isDeleted)
         {
-            throw new NoSuchElementException("Movie with ID: " + id + " not found");
+            throw new NoSuchElementException("Shift with ID: " + id + " not found");
         }
     }
 }
