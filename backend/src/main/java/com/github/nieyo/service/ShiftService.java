@@ -2,6 +2,7 @@ package com.github.nieyo.service;
 
 import com.github.nieyo.model.Shift;
 import com.github.nieyo.repository.ShiftRepository;
+import com.github.nieyo.validation.ShiftValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,28 +16,13 @@ public class ShiftService {
 
     private final ShiftRepository shiftRepository;
     private final IdService idService;
+    private final ShiftValidator shiftValidator;
 
     public Shift saveShift(Shift shiftToSave) {
-
-        validateShift(shiftToSave);
+        shiftValidator.validateShift(shiftToSave);
         String id = idService.randomId();
         shiftToSave = new Shift(id, shiftToSave.startTime(), shiftToSave.endTime(), shiftToSave.participants());
         return shiftRepository.save(shiftToSave);
-    }
-
-    // TODO: put this in an "ShiftValidation" class and refactor testing
-    private void validateShift(Shift shiftToValidate) {
-        if (shiftToValidate == null) {
-            throw new IllegalArgumentException("Shift cannot be null");
-        }
-
-        if (shiftToValidate.startTime() == null || shiftToValidate.endTime() == null) {
-            throw new IllegalArgumentException("startTime and endTime are required");
-        }
-
-        if (shiftToValidate.startTime().isAfter(shiftToValidate.endTime())) {
-            throw new IllegalArgumentException("Start must be before End");
-        }
     }
 
     public List<Shift> getShifts() {
@@ -48,7 +34,7 @@ public class ShiftService {
     }
 
     public Shift updateShift(String id, Shift shiftToUpdate) {
-        validateShift(shiftToUpdate);
+        shiftValidator.validateShift(shiftToUpdate);
         if (!shiftRepository.existsById(id)) {
             throw new NoSuchElementException(String.format("shift not found with the id %s", id));
         }

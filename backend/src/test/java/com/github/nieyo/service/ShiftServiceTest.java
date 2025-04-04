@@ -3,6 +3,7 @@ package com.github.nieyo.service;
 import com.github.nieyo.model.Shift;
 import com.github.nieyo.model.User;
 import com.github.nieyo.repository.ShiftRepository;
+import com.github.nieyo.validation.ShiftValidator;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -17,8 +18,8 @@ class ShiftServiceTest {
 
     ShiftRepository shiftRepository = mock(ShiftRepository.class);
     IdService idService = mock(IdService.class);
-    ShiftService shiftService = new ShiftService(shiftRepository, idService);
-
+    ShiftValidator shiftValidator = mock(ShiftValidator.class);
+    ShiftService shiftService = new ShiftService(shiftRepository, idService, shiftValidator);
 
     Instant startTime = Instant.parse("2025-03-26T12:00:00Z");
     Instant endTime = Instant.parse("2025-03-26T14:00:00Z");

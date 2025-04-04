@@ -19,7 +19,7 @@ public class GlobalExceptionHandler
         return new ErrorMessage(ex.getMessage());
     }
 
-    // Null Values
+    // null/invalid values
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IllegalArgumentException.class)
     public ErrorMessage handleIllegalArgumentException(Exception ex) {
