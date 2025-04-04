@@ -1,5 +1,4 @@
 import VolunteerGallery from "../volunteer/VolunteerGallery.tsx";
-import {ActionIcon, Card, CloseButton, Group, Space, Text} from "@mantine/core";
 import {Shift} from "../../types/types.ts";
 import {useNavigate} from "react-router-dom";
 

@@ -1,12 +1,8 @@
-import "@mantine/core/styles.css";
-import '@mantine/dates/styles.css';
-
 import {Route, Routes} from "react-router-dom";
 import ShiftGallery from "./components/shift/ShiftGallery.tsx";
 import Header from "./components/layout/Header.tsx";
 import ShiftForm from "./components/shift/ShiftForm.tsx";
 import useShiftState from "./hooks/useShiftState.ts";
-import {Container, Space, Stack} from "@mantine/core";
 
 export default function App() {
 

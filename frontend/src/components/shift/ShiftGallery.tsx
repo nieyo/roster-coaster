@@ -1,4 +1,3 @@
-import {Card, Group, Space, Stack, Text} from "@mantine/core";
 import ShiftCard from "./ShiftCard.tsx";
 import {Shift} from "../../types/types.ts";
 

@@ -1,9 +1,6 @@
-import {Button, Stack, TagsInput} from "@mantine/core";
-import {DateTimePicker, DateValue} from '@mantine/dates';
 import {useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {Shift} from "../../types/types.ts";
-import dayjs from "dayjs";
 
 interface AddShiftFormProps {
     handleSave: (shiftToSave: Shift) => void
