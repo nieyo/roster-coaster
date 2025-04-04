@@ -3,9 +3,13 @@ package com.github.nieyo.service;
 import com.github.nieyo.model.Shift;
 import com.github.nieyo.model.User;
 import com.github.nieyo.repository.ShiftRepository;
+import com.github.nieyo.validation.ShiftValidator;
 import org.junit.jupiter.api.Test;
 
+import java.time.Clock;
+import java.time.Duration;
 import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -17,12 +21,16 @@ class ShiftServiceTest {
 
     ShiftRepository shiftRepository = mock(ShiftRepository.class);
     IdService idService = mock(IdService.class);
-    ShiftService shiftService = new ShiftService(shiftRepository, idService);
+    private final Clock clock = Clock.fixed(Instant.parse("2025-04-01T00:00:00Z"), ZoneOffset.UTC);
 
+    ShiftValidator shiftValidator = new ShiftValidator(shiftRepository, clock);
+    ShiftService shiftService = new ShiftService(shiftRepository, idService, shiftValidator);
 
-    Instant startTime = Instant.parse("2025-03-26T12:00:00Z");
-    Instant endTime = Instant.parse("2025-03-26T14:00:00Z");
+    Instant now = clock.instant();
+    Instant startTime = now.plus(Duration.ofMinutes(15));
+    Instant endTime = startTime.plus(Duration.ofMinutes(30));
     List<User> participants = List.of();
+
 
     // CREATE
     @Test
@@ -51,7 +59,8 @@ class ShiftServiceTest {
     }
 
     @Test
-    void saveShift_ShouldThrowException_WhenShiftIsNull() {
+    void saveShift_shouldThrowException_whenShiftIsNull() {
+
         // WHEN & THEN
         assertThrows(IllegalArgumentException.class, () -> shiftService.saveShift(null));
 

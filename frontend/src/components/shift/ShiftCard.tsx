@@ -1,7 +1,6 @@
 import VolunteerGallery from "../volunteer/VolunteerGallery.tsx";
 import {ActionIcon, Card, CloseButton, Group, Space, Text} from "@mantine/core";
 import {Shift} from "../../types/types.ts";
-import {IconPencil} from "@tabler/icons-react";
 import {useNavigate} from "react-router-dom";
 
 interface ShiftCardProps {
@@ -28,9 +27,7 @@ export default function ShiftCard(props: Readonly<ShiftCardProps>) {
 
                 <ActionIcon size={"md"} variant="transparent"
                             onClick={() => navigate(`/edit/${props.shift.id}`, { state: { shift: props.shift } })}
-                >
-                    <IconPencil size={"16"} color={"lightgrey"}/>
-                </ActionIcon>
+                ></ActionIcon>
                 <CloseButton onClick={() => props.handleDelete(props.shift.id)}/>
 
             </Group>

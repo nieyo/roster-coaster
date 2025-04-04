@@ -1,7 +1,6 @@
 import {ActionIcon, Group, Pill, Stack, TextInput} from "@mantine/core";
 import {Shift, User} from "../../types/types.ts";
 import {ChangeEvent, useState} from "react";
-import {IconCheck} from "@tabler/icons-react";
 
 interface VolunteerGalleryProps {
     shift: Shift
@@ -34,8 +33,8 @@ export default function VolunteerGallery(props: Readonly<VolunteerGalleryProps>)
     };
 
     const pills = props.shift.participants
-        .map((user, index) => (
-            <Pill key={index}>
+        .map((user) => (
+            <Pill key={user.name}>
                 {user.name}
             </Pill>
         ));
@@ -60,9 +59,7 @@ export default function VolunteerGallery(props: Readonly<VolunteerGalleryProps>)
                 />
                 <ActionIcon size={"md"} color={"green"}
                             onClick={handleAddParticipant}
-                >
-                    <IconCheck size={"12"}/>
-                </ActionIcon>
+                ></ActionIcon>
             </Group>
         </Stack>
     )
