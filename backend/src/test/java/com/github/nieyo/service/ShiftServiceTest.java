@@ -18,7 +18,9 @@ class ShiftServiceTest {
 
     ShiftRepository shiftRepository = mock(ShiftRepository.class);
     IdService idService = mock(IdService.class);
-    ShiftValidator shiftValidator = mock(ShiftValidator.class);
+    ClockService clockService = mock(ClockService.class);
+
+    ShiftValidator shiftValidator = new ShiftValidator(shiftRepository, clockService);
     ShiftService shiftService = new ShiftService(shiftRepository, idService, shiftValidator);
 
     Instant startTime = Instant.parse("2025-03-26T12:00:00Z");
@@ -52,7 +54,8 @@ class ShiftServiceTest {
     }
 
     @Test
-    void saveShift_ShouldThrowException_WhenShiftIsNull() {
+    void saveShift_shouldThrowException_whenShiftIsNull() {
+
         // WHEN & THEN
         assertThrows(IllegalArgumentException.class, () -> shiftService.saveShift(null));
 
