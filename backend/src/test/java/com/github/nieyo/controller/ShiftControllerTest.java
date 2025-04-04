@@ -1,5 +1,6 @@
 package com.github.nieyo.controller;
 
+import com.github.nieyo.config.FixedClockConfig;
 import com.github.nieyo.model.Shift;
 import com.github.nieyo.model.User;
 import com.github.nieyo.repository.ShiftRepository;
@@ -12,14 +13,17 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.Clock;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
+@SpringBootTest(classes = FixedClockConfig.class)
 @AutoConfigureMockMvc
 class ShiftControllerTest {
 
@@ -29,12 +33,20 @@ class ShiftControllerTest {
     @Autowired
     private ShiftRepository shiftRepository;
 
-    Instant startTime = Instant.parse("2025-03-26T12:00:00Z");
-    Instant endTime = Instant.parse("2025-03-26T14:00:00Z");
+    @Autowired
+    private Clock clock;
+
+    Instant now;
+    Instant startTime;
+    Instant endTime;
     List<User> participants = List.of();
 
     @BeforeEach
     void setUp() {
+        now = clock.instant();
+        startTime = now.plus(Duration.ofMinutes(15));
+        endTime = startTime.plus(Duration.ofMinutes(30));
+
         shiftRepository.deleteAll();
     }
 
@@ -45,8 +57,8 @@ class ShiftControllerTest {
         // Given
         String requestBody = """
                 {
-                    "startTime": "2025-03-26T12:00:00Z",
-                    "endTime": "2025-03-26T14:00:00Z",
+                    "startTime": "2025-04-01T00:15:00Z",
+                    "endTime": "2025-04-01T00:45:00Z",
                     "participants": []
                 }
                 """;
@@ -59,24 +71,26 @@ class ShiftControllerTest {
                 // Then (HTTP layer)
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())
-                .andExpect(jsonPath("$.startTime").value("2025-03-26T12:00:00Z"))
-                .andExpect(jsonPath("$.endTime").value("2025-03-26T14:00:00Z"))
+                .andExpect(jsonPath("$.startTime").value(startTime.toString()))
+                .andExpect(jsonPath("$.endTime").value(endTime.toString()))
                 .andExpect(jsonPath("$.participants").isArray())
                 .andExpect(jsonPath("$.participants").isEmpty());
 
         // Verify database state
         List<Shift> shifts = shiftRepository.findAll();
         assertEquals(1, shifts.size());
-        assertEquals("2025-03-26T12:00:00Z", shifts.getFirst().startTime().toString());
+        assertEquals(startTime, shifts.getFirst().startTime());
+        assertEquals(endTime, shifts.getFirst().endTime());
+        assertTrue(shifts.getFirst().participants().isEmpty());
     }
 
     @Test
     void saveShift_shouldRejectInvalidTimeRange() throws Exception {
         String invalidBody = """
                 {
-                    "startTime": "2025-03-26T14:00:00Z",
-                    "endTime": "2025-03-26T12:00:00Z",
-                    "participants": {}
+                    "endTime": "2025-04-01T00:15:00Z",
+                    "startTime": "2025-04-01T00:45:00Z",
+                    "participants": []
                 }
                 """;
 
@@ -90,28 +104,24 @@ class ShiftControllerTest {
 
     @Test
     void saveShift_shouldReturn400WhenStartTimeIsNull() throws Exception {
-        testNullTimeScenario(
-                """
-                        {
-                            "startTime": null,
-                            "endTime": "2025-03-26T14:00:00Z",
-                            "participants": {}
-                        }
-                        """
-        );
+        testNullTimeScenario("""
+                {
+                    "startTime": ,
+                    "endTime": "2025-04-01T00:45:00Z",
+                    "participants": []
+                }
+                """);
     }
 
     @Test
     void saveShift_shouldReturn400WhenEndTimeIsNull() throws Exception {
-        testNullTimeScenario(
-                """
-                        {
-                            "startTime": "2025-03-26T12:00:00Z",
-                            "endTime": null,
-                            "participants": {}
-                        }
-                        """
-        );
+        testNullTimeScenario("""
+                {
+                    "startTime": "2025-04-01T00:15:00Z",
+                    "endTime": ,
+                    "participants": []
+                }
+                """);
     }
 
     private void testNullTimeScenario(String requestBody) throws Exception {
@@ -157,22 +167,22 @@ class ShiftControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 // THEN
                 .andExpect(status().isOk())
-                .andExpect(content().json("""
-                         [
-                           {
-                             "id": "1",
-                             "startTime": "2025-03-26T12:00:00Z",
-                             "endTime": "2025-03-26T14:00:00Z",
-                             "participants": []
-                           },
-                           {
-                             "id": "2",
-                             "startTime": "2025-03-26T12:00:00Z",
-                             "endTime": "2025-03-26T14:00:00Z",
-                             "participants": []
-                           }
-                         ]
-                        """));
+                .andExpect(content().json(
+                        """
+                [
+                    {
+                        "startTime": "2025-04-01T00:15:00Z",
+                        "endTime": "2025-04-01T00:45:00Z",
+                        "participants": []
+                    },
+                    {
+                        "startTime": "2025-04-01T00:15:00Z",
+                        "endTime": "2025-04-01T00:45:00Z",
+                        "participants": []
+                    }
+                ]
+                """)
+                );
     }
 
     // GET BY ID
@@ -188,13 +198,13 @@ class ShiftControllerTest {
                 // THEN
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
-                          {
-                            "id": "34",
-                            "startTime": "2025-03-26T12:00:00Z",
-                            "endTime": "2025-03-26T14:00:00Z",
-                            "participants": []
-                          }
-                        """));
+                {
+                    "id": "34",
+                    "startTime": "2025-04-01T00:15:00Z",
+                    "endTime": "2025-04-01T00:45:00Z",
+                    "participants": []
+                }
+                """));
     }
 
     @Test
@@ -218,24 +228,24 @@ class ShiftControllerTest {
         mvc.perform(put("/api/shift/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                    {
-                                      "id": "1",
-                                      "startTime": "2025-03-26T12:00:00Z",
-                                      "endTime": "2025-03-26T14:00:00Z",
-                                      "participants": [{"name": "Alan"}]
-                                    }
-                                """)
-                )
+                {
+                    "id": "1",
+                    "startTime": "2025-04-01T00:15:00Z",
+                    "endTime": "2025-04-01T00:45:00Z",
+                    "participants": []
+                }
+                """))
                 // THEN
                 .andExpect(status().isOk())
-                .andExpect(content().json("""
-                          {
-                            "id": "1",
-                            "startTime": "2025-03-26T12:00:00Z",
-                            "endTime": "2025-03-26T14:00:00Z",
-                            "participants": [{"name": "Alan"}]
-                          }
-                        """)
+                .andExpect(
+                        content().json("""
+                {
+                    "id": "1",
+                    "startTime": "2025-04-01T00:15:00Z",
+                    "endTime": "2025-04-01T00:45:00Z",
+                    "participants": []
+                }
+                """)
                 );
     }
 
@@ -250,8 +260,8 @@ class ShiftControllerTest {
                         .content("""
                                 {
                                 "id": "doesNotExist",
-                                "startTime": "2025-03-26T12:00:00Z",
-                                "endTime": "2025-03-26T14:00:00Z",
+                                "startTime": "2025-04-01T00:15:00Z",
+                                "endTime": "2025-04-01T00:45:00Z",
                                 "participants": [{"name": "Alan"}]
                                 }
                                 """)
@@ -272,13 +282,13 @@ class ShiftControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 """
-                                  {
-                                    "id": "2",
-                                    "startTime": "2025-03-26T12:00:00Z",
-                                    "endTime": "2025-03-26T14:00:00Z",
-                                    "participants": [{"name": "Alan"}]
-                                  }
-                                """
+                                          {
+                                            "id": "2",
+                                            "startTime": "2025-04-01T00:15:00Z",
+                                            "endTime": "2025-04-01T00:45:00Z",
+                                            "participants": [{"name": "Alan"}]
+                                          }
+                                        """
                         )
                 )
                 // THEN

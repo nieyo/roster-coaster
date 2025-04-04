@@ -2,10 +2,10 @@ package com.github.nieyo.validation;
 
 import com.github.nieyo.model.Shift;
 import com.github.nieyo.repository.ShiftRepository;
-import com.github.nieyo.service.ClockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
 public class ShiftValidator {
 
     private final ShiftRepository shiftRepository;
-    private final ClockService clockService;
+    private final Clock clock;
 
     public void validateShift(Shift shift) {
        validateNotNull(shift);
@@ -42,7 +42,7 @@ public class ShiftValidator {
     }
 
     private void validateNonPastShift(Shift shift) {
-        Instant now = clockService.now();
+        Instant now = clock.instant();
         Instant buffer = now.plusSeconds(5);
         if (shift.startTime().isBefore(buffer))
             throw new IllegalArgumentException("Shift cannot be in the past");

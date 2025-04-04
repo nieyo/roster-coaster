@@ -3,12 +3,12 @@ package com.github.nieyo.validation;
 import com.github.nieyo.model.Shift;
 import com.github.nieyo.model.User;
 import com.github.nieyo.repository.ShiftRepository;
-import com.github.nieyo.service.ClockService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -18,19 +18,14 @@ import static org.mockito.Mockito.*;
 class ShiftValidatorTest {
 
     ShiftRepository shiftRepository = mock(ShiftRepository.class);
-    ClockService clockService = mock(ClockService.class);
+    private final Clock clock = Clock.fixed(Instant.parse("2025-04-01T00:00:00Z"), ZoneOffset.UTC);
 
-    ShiftValidator shiftValidator = new ShiftValidator(shiftRepository, clockService);
+    ShiftValidator shiftValidator = new ShiftValidator(shiftRepository, clock);
 
-    Instant now = Instant.parse("2025-03-25T00:00:00Z");
-    Instant startTime = now.plus(Duration.ofMinutes(30));
+    Instant now = clock.instant();
+    Instant startTime = now.plus(Duration.ofMinutes(15));
     Instant endTime = startTime.plus(Duration.ofMinutes(30));
     List<User> participants = List.of();
-
-    @BeforeEach
-    void setUp() {
-        when(clockService.now()).thenReturn(now);
-    }
 
     @Test
     void validateShift_doesNotThrowException_whenShiftIsValid() {
