@@ -1,16 +1,13 @@
+import '@ant-design/v5-patch-for-react-19';
 import React from "react";
 import App from "./App.tsx";
 import {BrowserRouter} from "react-router-dom";
-import {MantineProvider} from "@mantine/core";
-import {theme} from "./theme.ts";
 import {createRoot} from "react-dom/client";
-
+import 'antd/dist/reset.css'
 createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-        <MantineProvider defaultColorScheme="auto" theme={theme}>
             <BrowserRouter>
                 <App/>
             </BrowserRouter>
-        </MantineProvider>
     </React.StrictMode>
 );
