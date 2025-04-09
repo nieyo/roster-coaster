@@ -1,54 +1,54 @@
-import "@mantine/core/styles.css";
-import '@mantine/dates/styles.css';
-
+import {Layout, ConfigProvider, theme} from "antd";
 import {Route, Routes} from "react-router-dom";
-import ShiftGallery from "./components/shift/ShiftGallery.tsx";
-import Header from "./components/layout/Header.tsx";
-import ShiftForm from "./components/shift/ShiftForm.tsx";
+import ShiftGallery from "./components/ShiftGallery.tsx";
 import useShiftState from "./hooks/useShiftState.ts";
-import {Container, Space, Stack} from "@mantine/core";
+import {useState} from "react";
 
 export default function App() {
+    const [isDarkMode, setIsDarkMode] = useState(true);
+    const toggleTheme = () => {
+        setIsDarkMode(prev => !prev);
+    };
 
     const {
         shiftList,
-        shiftListError,
         saveShift,
         updateShift,
         deleteShift
     } = useShiftState();
 
-    if (shiftListError) return <div>Error: {shiftListError}</div>;
 
     return (
-        <Container>
-            <Stack>
-                <Space/>
-                <Header/>
-                <Routes>
-                    <Route path={"/"} element={
-                        <ShiftGallery
-                            shifts={shiftList}
-                            handleDelete={deleteShift}
-                            handleUpdate={updateShift}
-                        />
-                    }/>
 
-                    <Route path={"/add"} element={
-                        <ShiftForm
-                            handleSave={saveShift}
-                            handleUpdate={() => {}}
-                        />
-                    }/>
+        <ConfigProvider
+            theme={{
+                algorithm: isDarkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
+            }}>
+            <Layout style={{minHeight: '100vh'}}>
+                <Layout.Content
+                    style={{
+                        padding: '48px 24px',
+                        maxWidth: '1200px',
+                        width: '90%',
+                        margin: '0 auto',
+                        transition: 'all 0.3s ease',
+                    }}
+                >
 
-                    <Route path={"/edit/:id"} element={
-                        <ShiftForm
-                            handleSave={() => {}}
-                            handleUpdate={updateShift}
-                        />
-                    }/>
-                </Routes>
-            </Stack>
-        </Container>
+                    <Routes>
+                        <Route path={"/"} element={
+                            <ShiftGallery
+                                shifts={shiftList}
+                                handleDelete={deleteShift}
+                                handleUpdate={updateShift}
+                                handleSave={saveShift}
+                                toggleTheme={toggleTheme}
+                                isDarkMode={isDarkMode}
+                            />
+                        }/>
+                    </Routes>
+                </Layout.Content>
+            </Layout>
+        </ConfigProvider>
     )
 }
