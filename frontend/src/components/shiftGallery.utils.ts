@@ -1,5 +1,3 @@
-// shiftGallery.utils.ts
-
 import { Shift, ShiftFormValues, User } from "../types/types";
 import React from "react";
 import {FormInstance} from "antd";
@@ -88,6 +86,7 @@ export const useShiftGalleryHandlers = (props: HandleFunctionsProps) => {
         } catch (error) {
             console.error("Fehler beim Update der Schicht:", error);
         }
+        props.setSelectedRowKeys([])
     };
 
     const handleAddUser = (values: ShiftFormValues) => {
@@ -114,12 +113,19 @@ export const useShiftGalleryHandlers = (props: HandleFunctionsProps) => {
         }
     };
 
-    const handleDeleteShifts = () => {
+    const handleDeleteShifts = (ids: string[]) => {
+
         if (props.shifts.length === 0) {
             return;
         }
 
-        props.setSelectedRowKeys([]);
+        ids.forEach((id) => {
+            try {
+                props.handleDelete(id.toString())
+            } catch (error) {
+                console.error("Fehler beim Löschen der Schicht:", error);
+            }
+        })
     };
 
     const handleClose = () => {
