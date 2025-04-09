@@ -26,7 +26,6 @@ export const useShiftGalleryHandlers = (props: HandleFunctionsProps) => {
     const handleSubmit = (values: ShiftFormValues) => {
         console.log("Schichtdaten:", values);
         const formName = values.formName;
-        console.log(formName);
 
         if (formName === "ADD_SHIFT") {
             handleAddShift(values);

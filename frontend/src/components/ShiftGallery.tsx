@@ -53,7 +53,6 @@ export default function ShiftGallery(props: Readonly<ShiftGalleryProps>) {
     const columns = ShiftTableColumns({setUserModalVisible, setSelectedShift})
 
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-        console.log('ShiftGallery Line: 183 --> selectedRowKeys changed: ', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
     };
 
