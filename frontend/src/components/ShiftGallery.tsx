@@ -1,13 +1,12 @@
 import {Shift} from "../types/types.ts";
 import {Flex, Form, TableProps} from "antd";
 import React, {useState} from "react";
-import AddShiftModal from "./AddShiftModal.tsx";
 import AddUserModal from "./AddUserModal.tsx";
-import EditShiftModal from "./EditShiftModal.tsx";
 import ShiftTableColumns from "./ShiftTableColumns.tsx";
 import ShiftCard from "./ShiftCard.tsx";
 import EventCard from "./EventCard.tsx";
 import {useShiftGalleryHandlers} from "./shiftGallery.utils.ts";
+import ShiftModal from "./ShiftModal.tsx";
 
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
 
@@ -63,11 +62,22 @@ export default function ShiftGallery(props: Readonly<ShiftGalleryProps>) {
 
     return (
         <>
-            <AddShiftModal
+            <ShiftModal
                 visible={shiftModalVisible}
                 onCancel={handleClose}
                 onSubmit={handleSubmit}
                 form={form}
+                mode={"ADD_SHIFT"}
+            />
+
+            <ShiftModal
+                visible={editShiftModalVisible}
+                onCancel={handleClose}
+                onSubmit={handleSubmit}
+                form={form}
+                findShiftById={findShiftById}
+                id={selectedRowKeys}
+                mode={"EDIT_SHIFT"}
             />
 
             <AddUserModal
@@ -76,15 +86,6 @@ export default function ShiftGallery(props: Readonly<ShiftGalleryProps>) {
                 onSubmit={handleSubmit}
                 form={form}
                 selectedShift={selectedShift}
-            />
-
-            <EditShiftModal
-                visible={editShiftModalVisible}
-                onCancel={handleClose}
-                onSubmit={handleSubmit}
-                form={form}
-                findShiftById={findShiftById}
-                id={selectedRowKeys}
             />
 
             <Flex gap={20} vertical>
