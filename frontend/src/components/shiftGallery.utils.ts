@@ -128,7 +128,16 @@ export const useShiftGalleryHandlers = (props: HandleFunctionsProps) => {
         props.setUserModalVisible(false);
         props.setEditShiftModalVisible(false);
         props.setSelectedShift(undefined);
-        props.form.setFieldsValue({ formName: undefined });
+
+        props.form.setFieldsValue({
+            formName: undefined,
+            selectedShift: undefined,
+            name: undefined,
+            tomorrow: undefined,
+            duration: undefined,
+            participants: [],
+        });
+
         props.form.resetFields();
     };
 

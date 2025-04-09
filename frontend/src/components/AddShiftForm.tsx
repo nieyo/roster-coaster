@@ -1,6 +1,7 @@
-import {DatePicker, Divider, Form, FormInstance, TimePicker} from 'antd';
+import {DatePicker, Divider, Form, FormInstance, Input, TimePicker} from 'antd';
 import {ShiftFormValues} from "../types/types.ts";
 import dayjs from "dayjs";
+import {useEffect} from "react";
 
 
 interface AddShiftFormProps {
@@ -9,6 +10,12 @@ interface AddShiftFormProps {
 }
 
 export default function AddShiftForm(props: Readonly<AddShiftFormProps>) {
+
+    useEffect(() => {
+        props.form.setFieldsValue({
+            formName: "ADD_SHIFT"
+        });
+    }, [props.form]);
 
     return (
         <>
@@ -50,7 +57,9 @@ export default function AddShiftForm(props: Readonly<AddShiftFormProps>) {
                         style={{width: '100%'}}
                     />
                 </Form.Item>
-                <Form.Item name="formName" noStyle />
+                <Form.Item name="formName" hidden>
+                    <Input type="hidden" />
+                </Form.Item>
             </Form>
         </>
 

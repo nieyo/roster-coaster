@@ -1,6 +1,6 @@
 import {Shift, ShiftFormValues} from "../types/types.ts";
-import {DatePicker, Divider, Form, FormInstance, Select, SelectProps, TimePicker, Typography} from "antd";
-import React from "react";
+import {DatePicker, Divider, Form, FormInstance, Input, Select, TimePicker} from "antd";
+import React, {useEffect} from "react";
 import dayjs from "dayjs";
 
 interface EditShiftFormProps {
@@ -12,29 +12,21 @@ interface EditShiftFormProps {
 
 export default function EditShiftForm(props: Readonly<EditShiftFormProps>) {
 
-    const Text = Typography
-    const options: SelectProps['options'] = [];
-    const shiftToUpdate = props.findShiftById(props.id.toString())
-
-    if (!shiftToUpdate) {
-        return (
-            <>
-                <Divider/>
-                <Text>Schicht nicht gefunden</Text>
-            </>
-        );
-    }
-
-    const initialValues = {
-        formName: "EDIT_SHIFT",
-        id: shiftToUpdate.id,
-        tomorrow: dayjs(shiftToUpdate.startTime).startOf('day'),
-        duration: [
-            dayjs(shiftToUpdate.startTime).startOf('minute'),
-            dayjs(shiftToUpdate.endTime).startOf('minute'),
-        ],
-        participants: shiftToUpdate.participants.map(user => user.name)
-    };
+    useEffect(() => {
+        const shift = props.findShiftById(props.id.toString());
+        if (shift) {
+            props.form.setFieldsValue({
+                formName: "EDIT_SHIFT",
+                id: shift.id,
+                tomorrow: dayjs(shift.startTime).startOf('day'),
+                duration: [
+                    dayjs(shift.startTime).startOf('minute'),
+                    dayjs(shift.endTime).startOf('minute')
+                ],
+                participants: shift.participants.map(u => u.name)
+            });
+        }
+    }, [props]);
 
     return (
         <>
@@ -45,8 +37,6 @@ export default function EditShiftForm(props: Readonly<EditShiftFormProps>) {
                 onFinish={props.onSubmit}
                 layout="vertical"
                 style={{maxWidth: 600}}
-
-                initialValues={initialValues}
             >
                 <Form.Item
                     name="tomorrow"
@@ -85,11 +75,14 @@ export default function EditShiftForm(props: Readonly<EditShiftFormProps>) {
                         mode="tags"
                         style={{ width: '100%' }}
                         placeholder="Tags Mode"
-                        options={options}
                     />
                 </Form.Item>
-                <Form.Item name="id" noStyle />
-                <Form.Item name="formName" noStyle />
+                <Form.Item name="id" hidden>
+                    <Input type="hidden" />
+                </Form.Item>
+                <Form.Item name="formName" hidden>
+                    <Input type="hidden" />
+                </Form.Item>
 
 
             </Form>
