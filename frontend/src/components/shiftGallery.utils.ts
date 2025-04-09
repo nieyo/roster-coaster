@@ -114,12 +114,23 @@ export const useShiftGalleryHandlers = (props: HandleFunctionsProps) => {
         }
     };
 
-    const handleDeleteShifts = () => {
+    const handleDeleteShifts = (ids: string[]) => {
+        console.log("HANDLE DELETE")
         if (props.shifts.length === 0) {
+            console.log("NO IDS")
             return;
         }
+        console.log("DELETE NOW")
 
-        props.setSelectedRowKeys([]);
+        ids.forEach((id) => {
+            try {
+                props.handleDelete(id.toString())
+            } catch (error) {
+                console.error("Fehler beim Löschen der Schicht:", error);
+            }
+        })
+
+        console.log("DELETED")
     };
 
     const handleClose = () => {

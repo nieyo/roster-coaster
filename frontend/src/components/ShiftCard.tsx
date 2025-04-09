@@ -8,7 +8,7 @@ interface ShiftTableCardProps {
     selectedRowKeys: React.Key[];
     setShiftModalVisible: (visible: boolean) => void;
     setEditShiftModalVisible: (visible: boolean) => void;
-    handleDeleteShifts: () => void;
+    handleDeleteShifts: (ids: string[]) => void;
     rowSelection: TableRowSelection<Shift>;
     columns: ({
         title: string
@@ -59,7 +59,7 @@ export default function ShiftCard(props: Readonly<ShiftTableCardProps>) {
                             icon={<DeleteOutlined />}
                             iconPosition="end"
                             onClick={() => {
-                                props.handleDeleteShifts();
+                                props.handleDeleteShifts(props.selectedRowKeys.map(key => key.toString()));
                             }}
                         >
                             Löschen
