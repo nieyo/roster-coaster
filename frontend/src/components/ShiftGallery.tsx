@@ -46,7 +46,7 @@ export default function ShiftGallery(props: Readonly<ShiftGalleryProps>) {
         setEditShiftModalVisible,
         setSelectedShift,
         form
-    });
+    });                                              
 
     const data: Shift[] = props.shifts
     const columns = ShiftTableColumns({setUserModalVisible, setSelectedShift})
