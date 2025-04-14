@@ -1,6 +1,6 @@
 import React, {JSX} from 'react';
 import {Card, Space, Button, Table, Popconfirm} from 'antd';
-import {PlusOutlined, EditOutlined, DeleteOutlined} from '@ant-design/icons';
+import {PlusOutlined, EditOutlined, DeleteOutlined, QuestionCircleOutlined} from '@ant-design/icons';
 import {Shift} from '../types/types';
 import {TableRowSelection} from "antd/es/table/interface";
 
@@ -53,13 +53,14 @@ export default function ShiftCard(props: Readonly<ShiftTableCardProps>) {
 
                     {props.selectedRowKeys.length > 0 && (
                         <Popconfirm
-                            title="Delete the task"
-                            description="Are you sure to delete this task?"
+                            title="Auswahl löschen?"
+                            // description="Sind Sie sicher?"
                             onConfirm={() => {
                                 props.handleDeleteShifts(props.selectedRowKeys.map(key => key.toString()))
                             }}
-                            okText="Yes"
-                            cancelText="No"
+                            okText="Löschen"
+                            cancelText="Abbrechen"
+                            icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
                         >
                             <Button
                                 type="text"
