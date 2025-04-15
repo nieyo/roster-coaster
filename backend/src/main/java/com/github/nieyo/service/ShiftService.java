@@ -34,13 +34,13 @@ public class ShiftService {
     }
 
     public Shift updateShift(String id, Shift shiftToUpdate) {
-        shiftValidator.validateShift(shiftToUpdate);
         if (!shiftRepository.existsById(id)) {
             throw new NoSuchElementException(String.format("shift not found with the id %s", id));
         }
         if (!id.equals(shiftToUpdate.id())) {
             throw new IllegalArgumentException("ID is not changeable");
         }
+        shiftValidator.validateShift(shiftToUpdate);
         return shiftRepository.save(shiftToUpdate);
     }
 
