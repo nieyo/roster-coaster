@@ -1,7 +1,7 @@
 import React, {JSX} from 'react';
-import { Card, Space, Button, Table } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Shift } from '../types/types';
+import {Card, Space, Button, Table, Popconfirm} from 'antd';
+import {PlusOutlined, EditOutlined, DeleteOutlined, QuestionCircleOutlined} from '@ant-design/icons';
+import {Shift} from '../types/types';
 import {TableRowSelection} from "antd/es/table/interface";
 
 interface ShiftTableCardProps {
@@ -29,7 +29,7 @@ export default function ShiftCard(props: Readonly<ShiftTableCardProps>) {
                 <Space.Compact>
                     {props.selectedRowKeys.length === 0 && (
                         <Button
-                            icon={<PlusOutlined />}
+                            icon={<PlusOutlined/>}
                             onClick={() => props.setShiftModalVisible(true)}
                             iconPosition="end"
                             type="default"
@@ -43,7 +43,7 @@ export default function ShiftCard(props: Readonly<ShiftTableCardProps>) {
                         <Button
                             type="default"
                             variant="outlined"
-                            icon={<EditOutlined />}
+                            icon={<EditOutlined/>}
                             iconPosition="end"
                             onClick={() => props.setEditShiftModalVisible(true)}
                         >
@@ -52,18 +52,26 @@ export default function ShiftCard(props: Readonly<ShiftTableCardProps>) {
                     )}
 
                     {props.selectedRowKeys.length > 0 && (
-                        <Button
-                            type="text"
-                            variant="outlined"
-                            color="red"
-                            icon={<DeleteOutlined />}
-                            iconPosition="end"
-                            onClick={() => {
-                                props.handleDeleteShifts(props.selectedRowKeys.map(key => key.toString()));
+                        <Popconfirm
+                            title="Auswahl löschen?"
+                            // description="Sind Sie sicher?"
+                            onConfirm={() => {
+                                props.handleDeleteShifts(props.selectedRowKeys.map(key => key.toString()))
                             }}
+                            okText="Löschen"
+                            cancelText="Abbrechen"
+                            icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
                         >
-                            Löschen
-                        </Button>
+                            <Button
+                                type="text"
+                                variant="outlined"
+                                color="red"
+                                icon={<DeleteOutlined/>}
+                                iconPosition="end"
+                            >
+                                Löschen
+                            </Button>
+                        </Popconfirm>
                     )}
                 </Space.Compact>
             }

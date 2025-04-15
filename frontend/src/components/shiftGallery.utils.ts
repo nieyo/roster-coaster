@@ -126,6 +126,7 @@ export const useShiftGalleryHandlers = (props: HandleFunctionsProps) => {
                 console.error("Fehler beim Löschen der Schicht:", error);
             }
         })
+        props.setSelectedRowKeys([])
     };
 
     const handleClose = () => {

@@ -32,13 +32,15 @@ export default function ShiftTableColumns(props: Readonly<ShiftTableColumnsProps
             title: 'Teilnehmer',
             render: (record: Shift) => (
                 <Flex justify="space-between" align="center">
-                    <Space align="center">
+                    <Space align="center" wrap>
                         {record.participants.length === 0 ? (
                             <Tag color="red" bordered={false}>
                                 {record.participants.length}
                             </Tag>
                         ) : (
-                            <Tag>{record.participants.length}</Tag>
+                            <Tag color="green">
+                                {record.participants.length}
+                            </Tag>
                         )}
                         {record.participants.length > 0 &&
                             record.participants.map((user) => (
