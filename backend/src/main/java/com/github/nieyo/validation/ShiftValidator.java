@@ -18,17 +18,16 @@ public class ShiftValidator {
     private final Clock clock;
 
     public void validateShift(Shift shift) {
-       validateNotNull(shift);
-       validateRequiredFields(shift);
-       validateTimeOrder(shift);
-       validateNonPastShift(shift);
-       validateMinimumDuration(shift);
-       validateNoOverlap(shift);
+        validateNotNull(shift);
+        validateRequiredFields(shift);
+        validateTimeOrder(shift);
+        validateNonPastShift(shift);
+        validateMinimumDuration(shift);
+        validateNoOverlap(shift);
     }
 
     private void validateNotNull(Shift shift) {
-        if (shift == null)
-            throw new IllegalArgumentException("Shift cannot be null");
+        if (shift == null) throw new IllegalArgumentException("Shift cannot be null");
     }
 
     private void validateRequiredFields(Shift shift) {
@@ -37,15 +36,13 @@ public class ShiftValidator {
     }
 
     private void validateTimeOrder(Shift shift) {
-        if (shift.startTime().isAfter(shift.endTime()))
-            throw new IllegalArgumentException("Start must be before End");
+        if (shift.startTime().isAfter(shift.endTime())) throw new IllegalArgumentException("Start must be before End");
     }
 
     private void validateNonPastShift(Shift shift) {
         Instant now = clock.instant();
         Instant buffer = now.plusSeconds(5);
-        if (shift.startTime().isBefore(buffer))
-            throw new IllegalArgumentException("Shift cannot be in the past");
+        if (shift.startTime().isBefore(buffer)) throw new IllegalArgumentException("Shift cannot be in the past");
     }
 
     private void validateMinimumDuration(Shift shift) {
@@ -56,9 +53,17 @@ public class ShiftValidator {
     }
 
     private void validateNoOverlap(Shift shift) {
-        List<Shift> overlappingShifts = shiftRepository.findOverlappingShifts(shift.startTime(), shift.endTime());
-        if (!overlappingShifts.isEmpty())
+        List<Shift> overlappingShifts;
+
+        if (shift.id() == null || shift.id().isEmpty()) {
+            overlappingShifts = shiftRepository.findOverlappingShifts(shift.startTime(), shift.endTime());
+        } else {
+            overlappingShifts = shiftRepository.findOverlappingShiftsExcludingSelf(shift.startTime(), shift.endTime(), shift.id());
+        }
+
+        if (!overlappingShifts.isEmpty()) {
             throw new IllegalArgumentException("Shift overlaps with existing shifts");
+        }
     }
 
     // when events are implemented, check events are not in the past and shifts are inside event range

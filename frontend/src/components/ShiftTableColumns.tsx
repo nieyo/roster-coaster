@@ -15,6 +15,10 @@ export default function ShiftTableColumns(props: Readonly<ShiftTableColumnsProps
         {
             title: 'Zeitraum',
             width: 100,
+            defaultSortOrder: 'ascend',
+            sorter: (a: Shift, b: Shift) => a.startTime.getTime() - b.startTime.getTime(),
+            sortDirections: ['ascend', 'descend', 'ascend'],
+            showSorterTooltip: false,
             render: (record: Shift) => (
                 <Text>
                     {record.startTime.toLocaleTimeString('de-DE', {

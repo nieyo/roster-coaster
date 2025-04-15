@@ -68,6 +68,7 @@ export default function ShiftGallery(props: Readonly<ShiftGalleryProps>) {
                 onSubmit={handleSubmit}
                 form={form}
                 mode={"ADD_SHIFT"}
+                shifts={props.shifts}
             />
 
             <ShiftModal
@@ -78,6 +79,7 @@ export default function ShiftGallery(props: Readonly<ShiftGalleryProps>) {
                 findShiftById={findShiftById}
                 id={selectedRowKeys}
                 mode={"EDIT_SHIFT"}
+                shifts={props.shifts}
             />
 
             <AddUserModal

@@ -1,4 +1,4 @@
-import { Shift, ShiftFormValues, User } from "../types/types";
+import { Shift, ShiftFormValues, User } from "../types/types.ts";
 import React from "react";
 import {FormInstance} from "antd";
 
