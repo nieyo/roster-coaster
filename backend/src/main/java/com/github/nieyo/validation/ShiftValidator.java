@@ -18,12 +18,12 @@ public class ShiftValidator {
     private final Clock clock;
 
     public void validateShift(Shift shift) {
-       validateNotNull(shift);
-       validateRequiredFields(shift);
-       validateTimeOrder(shift);
-       validateNonPastShift(shift);
-       validateMinimumDuration(shift);
-       validateNoOverlap(shift);
+        validateNotNull(shift);
+        validateRequiredFields(shift);
+        validateTimeOrder(shift);
+        validateNonPastShift(shift);
+        validateMinimumDuration(shift);
+        validateNoOverlap(shift);
     }
 
     private void validateNotNull(Shift shift) {
@@ -56,10 +56,26 @@ public class ShiftValidator {
     }
 
     private void validateNoOverlap(Shift shift) {
-        List<Shift> overlappingShifts = shiftRepository.findOverlappingShifts(shift.startTime(), shift.endTime());
-        if (!overlappingShifts.isEmpty())
+        List<Shift> overlappingShifts;
+
+        if (shift.id() == null) {
+            overlappingShifts = shiftRepository.findOverlappingShifts(
+                    shift.startTime(),
+                    shift.endTime()
+            );
+        } else {
+            overlappingShifts = shiftRepository.findOverlappingShiftsExcludingSelf(
+                    shift.startTime(),
+                    shift.endTime(),
+                    shift.id()
+            );
+        }
+
+        if (!overlappingShifts.isEmpty()) {
             throw new IllegalArgumentException("Shift overlaps with existing shifts");
+        }
     }
+
 
     // when events are implemented, check events are not in the past and shifts are inside event range
 }

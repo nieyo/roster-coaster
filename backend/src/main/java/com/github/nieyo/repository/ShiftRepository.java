@@ -14,4 +14,15 @@ public interface ShiftRepository extends MongoRepository<Shift, String> {
     @Query("{ 'startTime': { $lt: ?0 }, 'endTime': { $gt: ?1 } }")
     List<Shift> findOverlappingShifts(Instant startTime, Instant endTime);
 
+    @Query("{ "
+            + "_id: { $ne: ?2 }, "
+            + "startTime: { $lt: ?1 }, "
+            + "endTime: { $gt: ?0 } "
+            + "}")
+    List<Shift> findOverlappingShiftsExcludingSelf(
+            Instant startTime,
+            Instant endTime,
+            String shiftId
+    );
+
 }
