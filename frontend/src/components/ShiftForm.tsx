@@ -1,15 +1,16 @@
 import {DatePicker, Divider, Form, FormInstance, Input, Select, TimePicker} from "antd";
-import {Shift, ShiftFormValues} from "../types/types.ts";
-import dayjs from "dayjs";
+import dayjs, {Dayjs} from "dayjs";
 import React, {useEffect} from "react";
+import {ShiftFormValues} from "../types/form/ShiftFormValues.ts";
+import {ShiftDTO} from "../types/dto/ShiftDTO.ts";
 
 interface ShiftFormProps {
     mode: string,
     onSubmit: (values: ShiftFormValues) => void,
     form: FormInstance,
-    findShiftById?: (id: string) => Shift | undefined,
+    findShiftById?: (id: string) => ShiftDTO | undefined,
     id: React.Key[] | undefined,
-    shifts: Shift[]
+    shifts: ShiftDTO[]
 }
 
 export default function ShiftForm(props: Readonly<ShiftFormProps>) {
@@ -22,10 +23,10 @@ export default function ShiftForm(props: Readonly<ShiftFormProps>) {
                 form.setFieldsValue({
                     formName: "EDIT_SHIFT",
                     id: shift.id,
-                    tomorrow: dayjs(shift.startTime).startOf('day'),
+                    tomorrow: dayjs(shift.duration.start).startOf('day'),
                     duration: [
-                        dayjs(shift.startTime).startOf('minute'),
-                        dayjs(shift.endTime).startOf('minute')
+                        dayjs(shift.duration.start).startOf('minute'),
+                        dayjs(shift.duration.end).startOf('minute')
                     ],
                     participants: shift.participants.map(user => user.name)
                 });
@@ -69,13 +70,12 @@ export default function ShiftForm(props: Readonly<ShiftFormProps>) {
                             validator: (_, value) => {
                                 if (!value || value.length !== 2) return Promise.resolve();
 
-                                const startTime = new Date(value[0])
-                                const endTime = new Date(value[1])
-
+                                const startTime: Dayjs = value[0]
+                                const endTime: Dayjs = value[1]
 
                                 const overlapExists = props.shifts.some(existingShift =>
-                                    startTime < existingShift.endTime &&
-                                    endTime > existingShift.startTime
+                                    startTime < dayjs(existingShift.duration.end) &&
+                                    endTime > dayjs(existingShift.duration.start)
                                 );
 
                                 console.log(overlapExists)

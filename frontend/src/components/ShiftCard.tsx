@@ -1,25 +1,25 @@
 import React, {JSX} from 'react';
 import {Card, Space, Button, Table, Popconfirm} from 'antd';
 import {PlusOutlined, EditOutlined, DeleteOutlined, QuestionCircleOutlined} from '@ant-design/icons';
-import {Shift} from '../types/types';
 import {TableRowSelection} from "antd/es/table/interface";
+import {ShiftDTO} from "../types/dto/ShiftDTO.ts";
 
 interface ShiftTableCardProps {
     selectedRowKeys: React.Key[];
     setShiftModalVisible: (visible: boolean) => void;
     setEditShiftModalVisible: (visible: boolean) => void;
     handleDeleteShifts: (ids: string[]) => void;
-    rowSelection: TableRowSelection<Shift>;
+    rowSelection: TableRowSelection<ShiftDTO>;
     columns: ({
         title: string
         width: number
-        render: (record: Shift) => JSX.Element
+        render: (record: ShiftDTO) => JSX.Element
     } | {
         title: string
-        render: (record: Shift) => JSX.Element
+        render: (record: ShiftDTO) => JSX.Element
         width: undefined
     })[];
-    data: Shift[];
+    data: ShiftDTO[];
 }
 
 export default function ShiftCard(props: Readonly<ShiftTableCardProps>) {
@@ -78,7 +78,7 @@ export default function ShiftCard(props: Readonly<ShiftTableCardProps>) {
             title="Essensausgabe"
             variant="outlined"
         >
-            <Table<Shift>
+            <Table<ShiftDTO>
                 rowSelection={props.rowSelection}
                 rowKey={(record) => record.id}
                 size="small"

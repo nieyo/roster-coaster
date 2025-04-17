@@ -1,4 +1,3 @@
-import {Shift} from "../types/types.ts";
 import {Flex, Form, TableProps} from "antd";
 import React, {useState} from "react";
 import AddUserModal from "./AddUserModal.tsx";
@@ -7,14 +6,16 @@ import ShiftCard from "./ShiftCard.tsx";
 import EventCard from "./EventCard.tsx";
 import {useShiftGalleryHandlers} from "./shiftGallery.utils.ts";
 import ShiftModal from "./ShiftModal.tsx";
+import {CreateShiftDTO} from "../types/dto/CreateShiftDTO.ts";
+import {ShiftDTO} from "../types/dto/ShiftDTO.ts";
 
-type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
+type TableRowSelection<T extends object = object> = TableProps<T>["rowSelection"];
 
 interface ShiftGalleryProps {
-    shifts: Shift[],
+    shifts: ShiftDTO[],
     handleDelete: (id: string) => void,
-    handleUpdate: (id: string, shiftToSave: Shift) => void,
-    handleSave: (shiftToSave: Shift) => void,
+    handleUpdate: (id: string, shiftToUpdate: ShiftDTO) => void,
+    handleSave: (shiftToCreate: CreateShiftDTO) => void,
     toggleTheme: () => void,
     isDarkMode: boolean
 }
@@ -22,7 +23,7 @@ interface ShiftGalleryProps {
 export default function ShiftGallery(props: Readonly<ShiftGalleryProps>) {
 
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-    const [selectedShift, setSelectedShift] = useState<Shift>();
+    const [selectedShift, setSelectedShift] = useState<ShiftDTO>();
 
     const [form] = Form.useForm();
 
@@ -46,16 +47,16 @@ export default function ShiftGallery(props: Readonly<ShiftGalleryProps>) {
         setEditShiftModalVisible,
         setSelectedShift,
         form
-    });                                              
+    });
 
-    const data: Shift[] = props.shifts
-    const columns = ShiftTableColumns({setUserModalVisible, setSelectedShift})
+    const data: ShiftDTO[] = props.shifts;
+    const columns = ShiftTableColumns({setUserModalVisible, setSelectedShift});
 
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
         setSelectedRowKeys(newSelectedRowKeys);
     };
 
-    const rowSelection: TableRowSelection<Shift> = {
+    const rowSelection: TableRowSelection<ShiftDTO> = {
         selectedRowKeys,
         onChange: onSelectChange,
     };
@@ -91,7 +92,7 @@ export default function ShiftGallery(props: Readonly<ShiftGalleryProps>) {
             />
 
             <Flex gap={20} vertical>
-                <EventCard isDarkMode={props.isDarkMode} toggleTheme={props.toggleTheme} />
+                <EventCard isDarkMode={props.isDarkMode} toggleTheme={props.toggleTheme}/>
                 <ShiftCard
                     selectedRowKeys={selectedRowKeys}
                     setShiftModalVisible={setShiftModalVisible}
@@ -103,5 +104,5 @@ export default function ShiftGallery(props: Readonly<ShiftGalleryProps>) {
                 />
             </Flex>
         </>
-    )
+    );
 }

@@ -1,13 +1,14 @@
 import {Modal, FormInstance} from "antd";
 import AddUserForm from "./AddUserForm";
-import { Shift, ShiftFormValues } from "../types/types";
+import {ShiftFormValues} from "../types/form/ShiftFormValues.ts";
+import {ShiftDTO} from "../types/dto/ShiftDTO.ts";
 
 interface AddUserModalProps {
     visible: boolean;
     onCancel: () => void;
     onSubmit: (values: ShiftFormValues) => void;
     form: FormInstance; // Verwende den korrekten Form-Typ, falls vorhanden
-    selectedShift?: Shift;
+    selectedShift?: ShiftDTO;
 }
 
 export default function AddUserModal(props: Readonly<AddUserModalProps>) {

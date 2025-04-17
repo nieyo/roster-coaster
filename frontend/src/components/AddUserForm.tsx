@@ -1,11 +1,12 @@
 import {Divider, Form, FormInstance, Input} from "antd";
-import {Shift, ShiftFormValues} from "../types/types.ts";
 import {useEffect} from "react";
+import {ShiftDTO} from "../types/dto/ShiftDTO.ts";
+import {ShiftFormValues} from "../types/form/ShiftFormValues.ts";
 
 interface AddUserFormProps {
     onSubmit: (values: ShiftFormValues) => void,
     form: FormInstance,
-    selectedShift?: Shift
+    selectedShift?: ShiftDTO
 }
 
 export default function AddUserForm(props: Readonly<AddUserFormProps>) {

@@ -1,33 +1,39 @@
 import {useCallback, useEffect, useState} from 'react';
 import axios from 'axios';
-import {Shift} from "../types/types.ts";
+import {CreateShiftDTO} from "../types/dto/CreateShiftDTO.ts";
+import {ShiftDTO} from "../types/dto/ShiftDTO.ts";
+
 
 
 const useShiftState = () => {
-    const [shiftList, setShiftList] = useState<Shift[]>([]);
+    const [shiftList, setShiftList] = useState<ShiftDTO[]>([]);
     const [shiftListIsLoading, setShiftListIsLoading] = useState<boolean>(true);
     const [shiftListError, setShiftListError] = useState<string | null>(null);
     const baseURL = "/api/shift";
-
-    const convertShift = (rawShifts: Shift[]): Shift[] => {
-        return rawShifts.map(shift => ({
-            ...shift,
-            startTime: new Date(shift.startTime),
-            endTime: new Date(shift.endTime),
-            // participants: [...(shift.participants || [])]
-        }));
-    };
 
     const getShiftList = useCallback(() => {
         setShiftListIsLoading(true);
         axios.get(baseURL)
             .then((response) => {
-                setShiftList(convertShift(response.data));
+                setShiftList(response.data);
                 setShiftListError(null);
             })
             .catch(() => setShiftListError('Failed to fetch shifts'))
             .finally(() => setShiftListIsLoading(false));
     }, []);
+
+    // const convertShift = (shiftDTOList: ShiftDTO[]): Shift[] => {
+    //     return shiftDTOList.map(shift => ({
+    //         ...shift,
+    //         duration: (d: ShiftDurationDTO) => {
+    //             d.start = dayjs(d.start)
+    //         }
+    //
+    //         startTime: dayjs(shift.duration.start),
+    //         endTime: dayjs(shift.duration.end)
+    //         // participants: [...(shift.participants || [])]
+    //     }));
+    // };
 
     const deleteShift = (id: string) => {
         setShiftListIsLoading(true)
@@ -44,7 +50,7 @@ const useShiftState = () => {
             )
     };
 
-    const updateShift = (id: string, shiftToUpdate: Shift) => {
+    const updateShift = (id: string, shiftToUpdate: ShiftDTO) => {
         setShiftListIsLoading(true)
         axios.put(`${baseURL}/${id}`, shiftToUpdate)
             .then(() => {
@@ -58,9 +64,9 @@ const useShiftState = () => {
             })
     };
 
-    const saveShift = (shiftToSave: Shift) => {
+    const saveShift = (shiftToCreate: CreateShiftDTO) => {
         setShiftListIsLoading(true)
-        axios.post(baseURL, shiftToSave)
+        axios.post(baseURL, shiftToCreate)
             .then(() => {
                 getShiftList()
             })
