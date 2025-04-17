@@ -1,10 +1,11 @@
 import { Button, Flex, Space, Tag, Typography } from 'antd';
 import { PlusOutlined, UserOutlined } from '@ant-design/icons';
-import { Shift } from '../types/types';
+import {ShiftDTO} from "../types/dto/ShiftDTO.ts";
+import dayjs from "dayjs";
 
 interface ShiftTableColumnsProps {
     setUserModalVisible: (visible: boolean) => void;
-    setSelectedShift: (shift: Shift) => void;
+    setSelectedShift: (shift: ShiftDTO) => void;
 }
 
 export default function ShiftTableColumns(props: Readonly<ShiftTableColumnsProps>) {
@@ -16,25 +17,19 @@ export default function ShiftTableColumns(props: Readonly<ShiftTableColumnsProps
             title: 'Zeitraum',
             width: 100,
             defaultSortOrder: 'ascend',
-            sorter: (a: Shift, b: Shift) => a.startTime.getTime() - b.startTime.getTime(),
+            sorter: (a: ShiftDTO, b: ShiftDTO) => dayjs(a.duration.start).valueOf() - dayjs(b.duration.start).valueOf(),
             sortDirections: ['ascend', 'descend', 'ascend'],
             showSorterTooltip: false,
-            render: (record: Shift) => (
+            render: (record: ShiftDTO) => (
                 <Text>
-                    {record.startTime.toLocaleTimeString('de-DE', {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    })} -{' '}
-                    {record.endTime.toLocaleTimeString('de-DE', {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    })}
+                    {dayjs(record.duration.start).format('HH:mm')} -{' '}
+                    {dayjs(record.duration.end).format('HH:mm')}
                 </Text>
             )
         },
         {
-            title: 'Teilnehmer',
-            render: (record: Shift) => (
+            title: 'Helfer',
+            render: (record: ShiftDTO) => (
                 <Flex justify="space-between" align="center">
                     <Space align="center" wrap>
                         {record.participants.length === 0 ? (

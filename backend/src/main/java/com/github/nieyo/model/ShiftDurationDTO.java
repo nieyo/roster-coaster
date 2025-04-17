@@ -4,8 +4,8 @@ import jakarta.validation.constraints.NotEmpty;
 
 public record ShiftDurationDTO(
         @NotEmpty(message = "Shift start time must not be empty")
-        String start,
+        String start, // ISO date string
 
         @NotEmpty(message = "Shift end time must not be empty")
-        String end
+        String end // ISO date string
 ) {}

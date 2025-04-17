@@ -1,17 +1,21 @@
-import { Shift, ShiftFormValues, User } from "../types/types.ts";
 import React from "react";
 import {FormInstance} from "antd";
+import {CreateShiftDTO} from "../types/dto/CreateShiftDTO.ts";
+import {ShiftFormValues} from "../types/form/ShiftFormValues.ts";
+import {ShiftDTO} from "../types/dto/ShiftDTO.ts";
+import {UserDTO} from "../types/dto/UserDTO.ts";
+import {Dayjs} from "dayjs";
 
 interface HandleFunctionsProps {
-    shifts: Shift[];
+    shifts: ShiftDTO[];
     handleDelete: (id: string) => void;
-    handleUpdate: (id: string, shiftToSave: Shift) => void;
-    handleSave: (shiftToSave: Shift) => void;
+    handleUpdate: (id: string, shiftToUpdate: ShiftDTO) => void;
+    handleSave: (shiftToCreate: CreateShiftDTO) => void;
     setSelectedRowKeys: (keys: React.Key[]) => void;
     setShiftModalVisible: (visible: boolean) => void;
     setUserModalVisible: (visible: boolean) => void;
     setEditShiftModalVisible: (visible: boolean) => void;
-    setSelectedShift: (shift: Shift | undefined) => void;
+    setSelectedShift: (shift: ShiftDTO | undefined) => void;
     form: FormInstance;
 }
 
@@ -45,48 +49,52 @@ export const useShiftGalleryHandlers = (props: HandleFunctionsProps) => {
             return;
         }
 
-        const startTime = values.tomorrow.hour(values.duration[0].hour()).minute(values.duration[0].minute()).second(0).millisecond(0).toDate();
-        const endTime = values.tomorrow.hour(values.duration[1].hour()).minute(values.duration[1].minute()).second(0).millisecond(0).toDate();
-
-        const newShift: Shift = {
-            id: "",
-            startTime: startTime,
-            endTime: endTime,
+        const createShiftDTO: CreateShiftDTO = {
+            duration: {
+                start: mergeTime(values.tomorrow, values.duration[0]),
+                end: mergeTime(values.tomorrow, values.duration[1])
+            },
             participants: []
         };
 
         try {
-            props.handleSave(newShift);
+            props.handleSave(createShiftDTO);
         } catch (error) {
             console.error("Fehler beim Speichern der Schicht:", error);
         }
     };
+
+    function mergeTime(date: Dayjs, time: Dayjs): string {
+        return date
+            .hour(time.hour())
+            .minute(time.minute())
+            .second(time.second())
+            .millisecond(time.millisecond())
+            .toISOString();
+    }
 
     const handleEditShift = (values: ShiftFormValues) => {
         if (!values?.tomorrow || !values.duration?.length || values.duration.length < 2 || !values?.participants || !values?.id) {
             return;
         }
 
-        const id = values.id;
-        const startTime = values.tomorrow.hour(values.duration[0].hour()).minute(values.duration[0].minute()).second(0).millisecond(0).toDate();
-        const endTime = values.tomorrow.hour(values.duration[1].hour()).minute(values.duration[1].minute()).second(0).millisecond(0).toDate();
-        const participants = values.participants.map(name => ({
-            name: name,
-        }));
-
-        const newShift: Shift = {
-            id: id,
-            startTime: startTime,
-            endTime: endTime,
-            participants: participants
+        const shiftToUpdate: ShiftDTO = {
+            id: values.id,
+            duration: {
+                start: mergeTime(values.tomorrow, values.duration[0]),
+                end: mergeTime(values.tomorrow, values.duration[1])
+            },
+            participants: values.participants.map(name => ({
+                name: name,
+            }))
         };
 
         try {
-            props.handleUpdate(values.id, newShift);
+            props.handleUpdate(values.id, shiftToUpdate);
         } catch (error) {
             console.error("Fehler beim Update der Schicht:", error);
         }
-        props.setSelectedRowKeys([])
+        props.setSelectedRowKeys([]);
     };
 
     const handleAddUser = (values: ShiftFormValues) => {
@@ -94,11 +102,11 @@ export const useShiftGalleryHandlers = (props: HandleFunctionsProps) => {
             return;
         }
 
-        const newParticipant: User = {
+        const newParticipant: UserDTO = {
             name: values.name
         };
 
-        const updatedShift: Shift = {
+        const updatedShift: ShiftDTO = {
             ...values.selectedShift,
             participants: [
                 ...values.selectedShift.participants,
@@ -121,12 +129,12 @@ export const useShiftGalleryHandlers = (props: HandleFunctionsProps) => {
 
         ids.forEach((id) => {
             try {
-                props.handleDelete(id.toString())
+                props.handleDelete(id.toString());
             } catch (error) {
                 console.error("Fehler beim Löschen der Schicht:", error);
             }
-        })
-        props.setSelectedRowKeys([])
+        });
+        props.setSelectedRowKeys([]);
     };
 
     const handleClose = () => {

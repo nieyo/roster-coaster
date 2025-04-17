@@ -24,14 +24,14 @@ export default function App() {
             theme={{
                 algorithm: isDarkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
             }}>
-            <Layout style={{minHeight: '100vh'}}>
+            <Layout style={{minHeight: "100vh"}}>
                 <Layout.Content
                     style={{
-                        padding: '48px 24px',
-                        maxWidth: '1200px',
-                        width: '90%',
-                        margin: '0 auto',
-                        transition: 'all 0.3s ease',
+                        padding: "48px 24px",
+                        maxWidth: "1200px",
+                        width: "90%",
+                        margin: "0 auto",
+                        transition: "all 0.3s ease",
                     }}
                 >
 
@@ -50,5 +50,5 @@ export default function App() {
                 </Layout.Content>
             </Layout>
         </ConfigProvider>
-    )
+    );
 }

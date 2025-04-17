@@ -1,7 +1,8 @@
 import {Modal, FormInstance} from "antd";
-import ShiftForm from "./ShiftForm"; // Die zuvor erstellte kombinierte Form
-import {Shift, ShiftFormValues} from "../types/types";
 import React from "react";
+import {ShiftFormValues} from "../types/form/ShiftFormValues.ts";
+import ShiftForm from "./ShiftForm.tsx";
+import {ShiftDTO} from "../types/dto/ShiftDTO.ts";
 
 interface GenericShiftModalProps {
     mode: "ADD_SHIFT" | "EDIT_SHIFT",
@@ -9,9 +10,9 @@ interface GenericShiftModalProps {
     onCancel: () => void,
     onSubmit: (values: ShiftFormValues) => void,
     form: FormInstance,
-    findShiftById?: (id: string) => Shift | undefined,
+    findShiftById?: (id: string) => ShiftDTO | undefined,
     id?: React.Key[],
-    shifts: Shift[]
+    shifts: ShiftDTO[]
 }
 
 export default function ShiftModal(props: Readonly<GenericShiftModalProps>) {
