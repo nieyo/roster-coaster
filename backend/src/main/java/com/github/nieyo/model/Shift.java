@@ -7,8 +7,7 @@ import java.util.List;
 
 public record Shift(
         @Id String id,
-        Instant startTime,
-        Instant endTime,
+        List<Instant> duration,
         List<User> participants
 ) {
 }
