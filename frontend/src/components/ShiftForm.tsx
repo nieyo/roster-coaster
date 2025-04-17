@@ -82,10 +82,13 @@ export default function ShiftForm(props: Readonly<ShiftFormProps>) {
                                     .second(0)
                                     .millisecond(0);
 
-                                const overlapExists = props.shifts.some(existingShift =>
-                                    newShiftStart.isBefore(dayjs(existingShift.duration.end)) &&
-                                    newShiftEnd.isAfter(dayjs(existingShift.duration.start))
-                                );
+                                const currentId: string | undefined = form.getFieldValue('id');
+
+                                const overlapExists = props.shifts.some(existingShift => {
+                                    if (currentId && existingShift.id === currentId) return false;
+                                    return newShiftStart.isBefore(dayjs(existingShift.duration.end)) &&
+                                        newShiftEnd.isAfter(dayjs(existingShift.duration.start));
+                                });
 
                                 console.log("Overlap exists:", overlapExists);
 
