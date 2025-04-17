@@ -23,10 +23,10 @@ export default function ShiftForm(props: Readonly<ShiftFormProps>) {
                 form.setFieldsValue({
                     formName: "EDIT_SHIFT",
                     id: shift.id,
-                    tomorrow: dayjs(shift.duration.start).startOf('day'),
+                    tomorrow: dayjs(shift.duration.start).startOf("day"),
                     duration: [
-                        dayjs(shift.duration.start).startOf('minute'),
-                        dayjs(shift.duration.end).startOf('minute')
+                        dayjs(shift.duration.start).startOf("minute"),
+                        dayjs(shift.duration.end).startOf("minute")
                     ],
                     participants: shift.participants.map(user => user.name)
                 });
@@ -35,7 +35,7 @@ export default function ShiftForm(props: Readonly<ShiftFormProps>) {
         if (mode === "ADD_SHIFT") {
             form.setFieldsValue({
                 formName: "ADD_SHIFT",
-                tomorrow: dayjs().add(1, 'day').startOf('day')
+                tomorrow: dayjs().add(1, "day").startOf("day")
             });
         }
     }, [findShiftById, form, id, mode, props]);
@@ -57,7 +57,7 @@ export default function ShiftForm(props: Readonly<ShiftFormProps>) {
                 >
                     <DatePicker
                         disabled
-                        style={{width: '100%'}}
+                        style={{width: "100%"}}
                     />
                 </Form.Item>
 
@@ -65,20 +65,29 @@ export default function ShiftForm(props: Readonly<ShiftFormProps>) {
                     name="duration"
                     label="Zeitraum"
                     rules={[
-                        { required: true, message: "Zeitraum is required" },
+                        {required: true, message: "Zeitraum is required"},
                         {
-                            validator: (_, value) => {
+                            validator: (_, value) => { // day is important
                                 if (!value || value.length !== 2) return Promise.resolve();
 
-                                const startTime: Dayjs = value[0]
-                                const endTime: Dayjs = value[1]
+                                const newShiftStart: Dayjs = form.getFieldValue('tomorrow')
+                                    .hour(value[0].hour())
+                                    .minute(value[0].minute())
+                                    .second(0)
+                                    .millisecond(0);
+
+                                const newShiftEnd: Dayjs = form.getFieldValue('tomorrow')
+                                    .hour(value[1].hour())
+                                    .minute(value[1].minute())
+                                    .second(0)
+                                    .millisecond(0);
 
                                 const overlapExists = props.shifts.some(existingShift =>
-                                    startTime < dayjs(existingShift.duration.end) &&
-                                    endTime > dayjs(existingShift.duration.start)
+                                    newShiftStart.isBefore(dayjs(existingShift.duration.end)) &&
+                                    newShiftEnd.isAfter(dayjs(existingShift.duration.start))
                                 );
 
-                                console.log(overlapExists)
+                                console.log("Overlap exists:", overlapExists);
 
                                 return overlapExists
                                     ? Promise.reject(new Error("Der Zeitraum überschneidet sich mit einer bestehenden Schicht"))
@@ -93,7 +102,7 @@ export default function ShiftForm(props: Readonly<ShiftFormProps>) {
                         format="HH:mm"
                         hourStep={1}
                         minuteStep={15}
-                        style={{width: '100%'}}
+                        style={{width: "100%"}}
                     />
                 </Form.Item>
 
@@ -106,7 +115,7 @@ export default function ShiftForm(props: Readonly<ShiftFormProps>) {
                     >
                         <Select
                             mode="tags"
-                            style={{width: '100%'}}
+                            style={{width: "100%"}}
                             placeholder="Namen eingeben"
                         />
                     </Form.Item>
