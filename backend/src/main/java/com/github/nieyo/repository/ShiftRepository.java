@@ -11,9 +11,9 @@ import java.util.List;
 @Repository
 public interface ShiftRepository extends MongoRepository<Shift, String> {
 
-    @Query("{ 'startTime': { $lt: ?0 }, 'endTime': { $gt: ?1 } }")
-    List<Shift> findOverlappingShifts(Instant startTime, Instant endTime);
+    @Query("{ 'duration.start': { $lt: ?1 }, 'duration.end': { $gt: ?0 } }")
+    List<Shift> findOverlappingShifts(Instant start, Instant end);
 
-    @Query("{ _id: { $ne: ?2 }, startTime: { $lt: ?1 }, endTime: { $gt: ?0 } }")
-    List<Shift> findOverlappingShiftsExcludingSelf(Instant startTime, Instant endTime, String shiftId);
+    @Query("{ '_id': { $ne: ?2 }, 'duration.start': { $lt: ?1 }, 'duration.end': { $gt: ?0 } }")
+    List<Shift> findOverlappingShiftsExcludingSelf(Instant start, Instant end, String shiftId);
 }

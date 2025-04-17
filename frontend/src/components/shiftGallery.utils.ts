@@ -45,14 +45,14 @@ export const useShiftGalleryHandlers = (props: HandleFunctionsProps) => {
     };
 
     const handleAddShift = (values: ShiftFormValues) => {
-        if (!values?.tomorrow || !values.duration?.length || values.duration.length < 2) {
+        if (!values?.eventDate || !values.duration?.length || values.duration.length < 2) {
             return;
         }
 
         const createShiftDTO: CreateShiftDTO = {
             duration: {
-                start: mergeTime(values.tomorrow, values.duration[0]),
-                end: mergeTime(values.tomorrow, values.duration[1])
+                start: mergeTime(values.eventDate, values.duration[0]),
+                end: mergeTime(values.eventDate, values.duration[1])
             },
             participants: []
         };
@@ -74,15 +74,15 @@ export const useShiftGalleryHandlers = (props: HandleFunctionsProps) => {
     }
 
     const handleEditShift = (values: ShiftFormValues) => {
-        if (!values?.tomorrow || !values.duration?.length || values.duration.length < 2 || !values?.participants || !values?.id) {
+        if (!values?.eventDate || !values.duration?.length || values.duration.length < 2 || !values?.participants || !values?.id) {
             return;
         }
 
         const shiftToUpdate: ShiftDTO = {
             id: values.id,
             duration: {
-                start: mergeTime(values.tomorrow, values.duration[0]),
-                end: mergeTime(values.tomorrow, values.duration[1])
+                start: mergeTime(values.eventDate, values.duration[0]),
+                end: mergeTime(values.eventDate, values.duration[1])
             },
             participants: values.participants.map(name => ({
                 name: name,
@@ -147,7 +147,7 @@ export const useShiftGalleryHandlers = (props: HandleFunctionsProps) => {
             formName: undefined,
             selectedShift: undefined,
             name: undefined,
-            tomorrow: undefined,
+            eventDate: undefined,
             duration: undefined,
             participants: [],
         });

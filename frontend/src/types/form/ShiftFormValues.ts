@@ -4,7 +4,7 @@ import {ShiftDTO} from "../dto/ShiftDTO.ts";
 export interface ShiftFormValues {
     id?: string;
     selectedShift?: ShiftDTO;
-    tomorrow?: Dayjs;
+    eventDate?: Dayjs;
     duration?: [Dayjs, Dayjs];
     name?: string;
     participants?: string[];

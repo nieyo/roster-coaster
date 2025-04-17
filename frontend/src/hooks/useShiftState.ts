@@ -22,19 +22,6 @@ const useShiftState = () => {
             .finally(() => setShiftListIsLoading(false));
     }, []);
 
-    // const convertShift = (shiftDTOList: ShiftDTO[]): Shift[] => {
-    //     return shiftDTOList.map(shift => ({
-    //         ...shift,
-    //         duration: (d: ShiftDurationDTO) => {
-    //             d.start = dayjs(d.start)
-    //         }
-    //
-    //         startTime: dayjs(shift.duration.start),
-    //         endTime: dayjs(shift.duration.end)
-    //         // participants: [...(shift.participants || [])]
-    //     }));
-    // };
-
     const deleteShift = (id: string) => {
         setShiftListIsLoading(true)
         axios.delete(`${baseURL}/${id}`)
