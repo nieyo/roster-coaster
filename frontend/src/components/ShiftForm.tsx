@@ -1,5 +1,5 @@
 import {DatePicker, Divider, Form, FormInstance, Input, Select, TimePicker} from "antd";
-import dayjs from "dayjs";
+import dayjs, {Dayjs} from "dayjs";
 import React, {useEffect} from "react";
 import {ShiftFormValues} from "../types/form/ShiftFormValues.ts";
 import {ShiftDTO} from "../types/dto/ShiftDTO.ts";
@@ -66,26 +66,25 @@ export default function ShiftForm(props: Readonly<ShiftFormProps>) {
                     label="Zeitraum"
                     rules={[
                         { required: true, message: "Zeitraum is required" },
-                        // {
-                        //     validator: (_, value) => {
-                        //         if (!value || value.length !== 2) return Promise.resolve();
-                        //
-                        //         const startTime = new Date(value[0])
-                        //         const endTime = new Date(value[1])
-                        //
-                        //
-                        //         const overlapExists = props.shifts.some(existingShift =>
-                        //             startTime < existingShift.endTime &&
-                        //             endTime > existingShift.startTime
-                        //         );
-                        //
-                        //         console.log(overlapExists)
-                        //
-                        //         return overlapExists
-                        //             ? Promise.reject(new Error("Der Zeitraum überschneidet sich mit einer bestehenden Schicht"))
-                        //             : Promise.resolve();
-                        //     },
-                        // },
+                        {
+                            validator: (_, value) => {
+                                if (!value || value.length !== 2) return Promise.resolve();
+
+                                const startTime: Dayjs = value[0]
+                                const endTime: Dayjs = value[1]
+
+                                const overlapExists = props.shifts.some(existingShift =>
+                                    startTime < dayjs(existingShift.duration.end) &&
+                                    endTime > dayjs(existingShift.duration.start)
+                                );
+
+                                console.log(overlapExists)
+
+                                return overlapExists
+                                    ? Promise.reject(new Error("Der Zeitraum überschneidet sich mit einer bestehenden Schicht"))
+                                    : Promise.resolve();
+                            },
+                        },
                     ]}
                     labelCol={{span: 24}}
                     wrapperCol={{span: 24}}
