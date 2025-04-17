@@ -23,7 +23,7 @@ export default function ShiftForm(props: Readonly<ShiftFormProps>) {
                 form.setFieldsValue({
                     formName: "EDIT_SHIFT",
                     id: shift.id,
-                    tomorrow: dayjs(shift.duration.start).startOf("day"),
+                    eventDate: dayjs(shift.duration.start).startOf("day"),
                     duration: [
                         dayjs(shift.duration.start).startOf("minute"),
                         dayjs(shift.duration.end).startOf("minute")
@@ -35,7 +35,7 @@ export default function ShiftForm(props: Readonly<ShiftFormProps>) {
         if (mode === "ADD_SHIFT") {
             form.setFieldsValue({
                 formName: "ADD_SHIFT",
-                tomorrow: dayjs().add(1, "day").startOf("day")
+                eventDate: dayjs().add(1, "day").startOf("day")
             });
         }
     }, [findShiftById, form, id, mode, props]);
@@ -50,7 +50,7 @@ export default function ShiftForm(props: Readonly<ShiftFormProps>) {
                 style={{maxWidth: 600}}
             >
                 <Form.Item
-                    name="tomorrow"
+                    name="eventDate"
                     label="Datum"
                     labelCol={{span: 24}}
                     wrapperCol={{span: 24}}
@@ -70,13 +70,13 @@ export default function ShiftForm(props: Readonly<ShiftFormProps>) {
                             validator: (_, value) => { // day is important
                                 if (!value || value.length !== 2) return Promise.resolve();
 
-                                const newShiftStart: Dayjs = form.getFieldValue('tomorrow')
+                                const newShiftStart: Dayjs = form.getFieldValue('eventDate')
                                     .hour(value[0].hour())
                                     .minute(value[0].minute())
                                     .second(0)
                                     .millisecond(0);
 
-                                const newShiftEnd: Dayjs = form.getFieldValue('tomorrow')
+                                const newShiftEnd: Dayjs = form.getFieldValue('eventDate')
                                     .hour(value[1].hour())
                                     .minute(value[1].minute())
                                     .second(0)
