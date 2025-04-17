@@ -1,7 +1,9 @@
 package com.github.nieyo.controller;
 
+import com.github.nieyo.model.CreateShiftDTO;
 import com.github.nieyo.model.Shift;
 import com.github.nieyo.service.ShiftService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +21,7 @@ public class ShiftController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Shift saveShift(@RequestBody Shift shiftToSave) {
+    public Shift saveShift(@Valid @RequestBody CreateShiftDTO shiftToSave) {
         return shiftService.saveShift(shiftToSave);
     }
 
@@ -41,7 +43,7 @@ public class ShiftController {
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Shift updateShift(@PathVariable String id, @RequestBody Shift shiftToUpdate) {
+    public Shift updateShift(@PathVariable String id, @Valid @RequestBody Shift shiftToUpdate) {
         return shiftService.updateShift(id, shiftToUpdate);
     }
 

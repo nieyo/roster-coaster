@@ -1,7 +1,6 @@
 package com.github.nieyo.service;
 
-import com.github.nieyo.model.Shift;
-import com.github.nieyo.model.User;
+import com.github.nieyo.model.*;
 import com.github.nieyo.repository.ShiftRepository;
 import com.github.nieyo.validation.ShiftValidator;
 import org.junit.jupiter.api.Test;
@@ -29,6 +28,8 @@ class ShiftServiceTest {
     Instant now = clock.instant();
     Instant startTime = now.plus(Duration.ofMinutes(15));
     Instant endTime = startTime.plus(Duration.ofMinutes(30));
+    ShiftDuration duration = new ShiftDuration(startTime, endTime);
+    ShiftDurationDTO durationDTO = new ShiftDurationDTO(startTime.toString(), endTime.toString());
     List<User> participants = List.of();
 
 
@@ -37,32 +38,32 @@ class ShiftServiceTest {
     void saveShift_ShouldPersistNewEntity() {
 
         // GIVEN
-        Shift inputShift = new Shift(null, startTime, endTime, List.of());
+        CreateShiftDTO inputShift = new CreateShiftDTO(durationDTO, List.of());
 
         String expectedId = "generated-id";
         when(idService.randomId()).thenReturn(expectedId);
 
-        Shift expectedShift = new Shift(expectedId, startTime, endTime, participants);
-        when(shiftRepository.save(any(Shift.class))).thenReturn(expectedShift);
+        Shift expected = new Shift(expectedId, duration, participants);
+        when(shiftRepository.save(any(Shift.class))).thenReturn(expected);
 
         // WHEN
-        Shift result = shiftService.saveShift(inputShift);
+        Shift actual = shiftService.saveShift(inputShift);
 
         // THEN
         verify(idService).randomId();
         verify(shiftRepository).save(any(Shift.class));
-        assertNotNull(result);
-        assertEquals(expectedId, result.id());
-        assertEquals(startTime, result.startTime());
-        assertEquals(endTime, result.endTime());
-        assertEquals(participants, result.participants());
+        assertNotNull(actual);
+        assertEquals(expected.id(), actual.id());
+        assertEquals(expected.duration().start(), actual.duration().start());
+        assertEquals(expected.duration().end(), actual.duration().end());
+        assertEquals(expected.participants(), actual.participants());
     }
 
     @Test
     void saveShift_shouldThrowException_whenShiftIsNull() {
 
         // WHEN & THEN
-        assertThrows(IllegalArgumentException.class, () -> shiftService.saveShift(null));
+        assertThrows(NullPointerException.class, () -> shiftService.saveShift(null));
 
         // Verify repository was never called
         verify(shiftRepository, never()).save(any());
@@ -70,11 +71,11 @@ class ShiftServiceTest {
 
     @Test
     void saveShift_ShouldThrowException_WhenRequiredFieldIsNull() {
-        Shift invalidShiftNoStart = new Shift(null, null, Instant.now(), List.of());
-        Shift invalidShiftNoEnd = new Shift(null, startTime, null, List.of());
+        CreateShiftDTO invalidShiftNoStart = new CreateShiftDTO(new ShiftDurationDTO(null, endTime.toString()), List.of());
+        CreateShiftDTO invalidShiftNoEnd = new CreateShiftDTO(new ShiftDurationDTO(startTime.toString(), null), List.of());
 
-        assertThrows(IllegalArgumentException.class, () -> shiftService.saveShift(invalidShiftNoStart));
-        assertThrows(IllegalArgumentException.class, () -> shiftService.saveShift(invalidShiftNoEnd));
+        assertThrows(NullPointerException.class, () -> shiftService.saveShift(invalidShiftNoStart));
+        assertThrows(NullPointerException.class, () -> shiftService.saveShift(invalidShiftNoEnd));
 
         // Verify repository was never called
         verify(shiftRepository, never()).save(any());
@@ -82,10 +83,8 @@ class ShiftServiceTest {
 
     @Test
     void saveShift_ShouldThrowException_WhenEndTimeBeforeStartTime() {
-        Shift invalidShift = new Shift(
-                null,
-                endTime,
-                startTime, // wrong order
+        CreateShiftDTO invalidShift = new CreateShiftDTO(
+                new ShiftDurationDTO(endTime.toString(), startTime.toString()), // wrong order
                 List.of()
         );
 
@@ -112,9 +111,9 @@ class ShiftServiceTest {
     void getShifts_whenNotEmpty_returnShiftList() {
         // GIVEN
         List<Shift> expected = List.of(
-                new Shift("1", startTime, endTime, participants),
-                new Shift("2", startTime, endTime, participants),
-                new Shift("3", startTime, endTime, participants)
+                new Shift("1", duration, participants),
+                new Shift("2", duration, participants),
+                new Shift("3", duration, participants)
         );
         when(shiftRepository.findAll()).thenReturn(expected);
         // WHEN
@@ -129,7 +128,7 @@ class ShiftServiceTest {
     void getShiftById_whenIdExists_returnShift() {
         // GIVEN
         String existingId = "idToSearchFor";
-        Optional<Shift> expected = Optional.of(new Shift(existingId, startTime, endTime, participants));
+        Optional<Shift> expected = Optional.of(new Shift(existingId, duration, participants));
         when(shiftRepository.findById(existingId)).thenReturn(expected);
 
         // WHEN
@@ -160,7 +159,7 @@ class ShiftServiceTest {
     void updateShift_whenFound_returnShift() {
         // GIVEN
         String targetId = "2";
-        Shift expected = new Shift("2", startTime, endTime.plusSeconds(3600), participants);
+        Shift expected = new Shift("2", duration.withEnd(endTime.plusSeconds(3600)), participants);
         when(shiftRepository.existsById(targetId)).thenReturn(true);
         when(shiftRepository.save(expected)).thenReturn(expected);
 
@@ -171,15 +170,15 @@ class ShiftServiceTest {
         verify(shiftRepository).existsById(targetId);
         verify(shiftRepository).save(expected);
         assertEquals(expected.id(), actual.id());
-        assertEquals(expected.startTime(), actual.startTime());
-        assertEquals(expected.endTime(), actual.endTime());
+        assertEquals(expected.duration().start(), actual.duration().start());
+        assertEquals(expected.duration().end(), actual.duration().end());
         assertEquals(expected.participants(), actual.participants());
     }
 
     @Test
     void updateShift_whenNotFound_throwNoSuchElementException() {
         String targetId = "3";
-        Shift updatedShift = new Shift(targetId, startTime, endTime, participants);
+        Shift updatedShift = new Shift(targetId, duration, participants);
         when(shiftRepository.existsById(targetId)).thenReturn(false);
 
         // WHEN + THEN
@@ -191,7 +190,7 @@ class ShiftServiceTest {
     void updateShift_whenIdDoesNotMatch_throwIllegalArgumentException() {
         // GIVEN
         String targetId = "3";
-        Shift updatedShift = new Shift("notMatchingId", startTime, endTime, participants);
+        Shift updatedShift = new Shift("notMatchingId", duration, participants);
         when(shiftRepository.existsById(targetId)).thenReturn(true);
         when(shiftRepository.save(updatedShift)).thenReturn(updatedShift);
 
