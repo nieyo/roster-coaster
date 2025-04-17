@@ -1,11 +1,11 @@
-import dayjs from "dayjs";
+import {Dayjs} from "dayjs";
 import {ShiftDTO} from "../dto/ShiftDTO.ts";
 
 export interface ShiftFormValues {
     id?: string;
     selectedShift?: ShiftDTO;
-    tomorrow?: dayjs.Dayjs;
-    duration?: [dayjs.Dayjs, dayjs.Dayjs];
+    tomorrow?: Dayjs;
+    duration?: [Dayjs, Dayjs];
     name?: string;
     participants?: string[];
     formName: string;
