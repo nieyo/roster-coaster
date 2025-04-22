@@ -1,4 +1,4 @@
-import {DatePicker, Divider, Form, FormInstance, Input, Select, TimePicker} from "antd";
+import {DatePicker, Divider, Flex, Form, FormInstance, Input, Select, TimePicker} from "antd";
 import dayjs, {Dayjs} from "dayjs";
 import React, {useEffect} from "react";
 import {ShiftFormValues} from "../types/form/ShiftFormValues.ts";
@@ -28,7 +28,9 @@ export default function ShiftForm(props: Readonly<ShiftFormProps>) {
                         dayjs(shift.duration.start).startOf("minute"),
                         dayjs(shift.duration.end).startOf("minute")
                     ],
-                    participants: shift.participants.map(user => user.name)
+                    participants: shift.participants.map(user => user.name),
+                    min: shift.minParticipants,
+                    max: shift.maxParticipants
                 });
             }
         }
@@ -70,13 +72,13 @@ export default function ShiftForm(props: Readonly<ShiftFormProps>) {
                             validator: (_, value) => {
                                 if (!value || value.length !== 2) return Promise.resolve();
 
-                                const newShiftStart: Dayjs = form.getFieldValue('eventDate')
+                                const newShiftStart: Dayjs = form.getFieldValue("eventDate")
                                     .hour(value[0].hour())
                                     .minute(value[0].minute())
                                     .second(0)
                                     .millisecond(0);
 
-                                const newShiftEnd: Dayjs = form.getFieldValue('eventDate')
+                                const newShiftEnd: Dayjs = form.getFieldValue("eventDate")
                                     .hour(value[1].hour())
                                     .minute(value[1].minute())
                                     .second(0)
@@ -87,7 +89,7 @@ export default function ShiftForm(props: Readonly<ShiftFormProps>) {
                                     return Promise.reject(new Error("Der Zeitraum darf nicht in der Vergangenheit liegen"));
                                 }
 
-                                const currentId: string | undefined = form.getFieldValue('id');
+                                const currentId: string | undefined = form.getFieldValue("id");
 
                                 const overlapExists = props.shifts.some(existingShift => {
                                     if (currentId && existingShift.id === currentId) return false;
@@ -128,6 +130,58 @@ export default function ShiftForm(props: Readonly<ShiftFormProps>) {
                         />
                     </Form.Item>
                 )}
+
+                <Flex gap="middle" style={{ width: '100%' }}>
+                    <Form.Item
+                        name="min"
+                        label="Minimum Anzahl Helfer"
+                        style={{ width: '100%' }}
+                        rules={[
+                            {
+                                type: 'number',
+                                min: 0,
+                                message: 'Minimum muss größer oder gleich 0 sein',
+                                transform: (value) => (value ? Number(value) : undefined),
+                            },
+                        ]}
+                    >
+                        <Input type="number" />
+                    </Form.Item>
+
+                    <Form.Item
+                        name="max"
+                        label="Maximum Anzahl Helfer"
+                        style={{ width: '100%' }}
+                        dependencies={['min']}
+                        rules={[
+                            {
+                                type: 'number',
+                                min: 0,
+                                message: 'Maximum muss größer oder gleich 0 sein',
+                                transform: (value) => (value ? Number(value) : undefined),
+                            },
+                            ({ getFieldValue }) => ({
+                                validator(_, value) {
+                                    const min = getFieldValue('min');
+                                    if (
+                                        value === undefined || value === '' ||
+                                        min === undefined || min === ''
+                                    ) {
+                                        // Wenn eines der Felder leer ist, Validierung überspringen
+                                        return Promise.resolve();
+                                    }
+                                    if (Number(value) < Number(min)) {
+                                        return Promise.reject(new Error('Maximum darf nicht kleiner als Minimum sein'));
+                                    }
+                                    return Promise.resolve();
+                                },
+                            }),
+                        ]}
+                    >
+                        <Input type="number" />
+                    </Form.Item>
+                </Flex>
+
 
                 {mode === "EDIT_SHIFT" && (
                     <Form.Item name="id" hidden>

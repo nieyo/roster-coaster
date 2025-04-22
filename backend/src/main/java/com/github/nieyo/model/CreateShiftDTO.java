@@ -14,6 +14,7 @@ public record CreateShiftDTO(
 
         @NotNull(message = "Participants must not be null")
         List<@Valid UserDTO> participants,
+
         int minParticipants,
         int maxParticipants
 ) {}

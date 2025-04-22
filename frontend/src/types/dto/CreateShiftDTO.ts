@@ -4,4 +4,6 @@ import {UserDTO} from "./UserDTO.ts";
 export interface CreateShiftDTO {
     duration: ShiftDurationDTO;
     participants: UserDTO[];
+    minParticipants: number;
+    maxParticipants: number;
 }

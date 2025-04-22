@@ -5,4 +5,6 @@ export interface ShiftDTO {
     id: string;
     duration: ShiftDurationDTO;
     participants: UserDTO[];
+    minParticipants: number;
+    maxParticipants: number;
 }

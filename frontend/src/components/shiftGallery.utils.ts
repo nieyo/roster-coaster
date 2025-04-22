@@ -26,7 +26,7 @@ export const useShiftGalleryHandlers = (props: HandleFunctionsProps) => {
     };
 
     const handleSubmit = (values: ShiftFormValues) => {
-        console.log("Schichtdaten:", values);
+
         const formName = values.formName;
 
         if (formName === "ADD_SHIFT") {
@@ -54,7 +54,9 @@ export const useShiftGalleryHandlers = (props: HandleFunctionsProps) => {
                 start: mergeTime(values.eventDate, values.duration[0]),
                 end: mergeTime(values.eventDate, values.duration[1])
             },
-            participants: []
+            participants: [],
+            minParticipants: values.min,
+            maxParticipants: values.max
         };
 
         try {
@@ -86,7 +88,9 @@ export const useShiftGalleryHandlers = (props: HandleFunctionsProps) => {
             },
             participants: values.participants.map(name => ({
                 name: name,
-            }))
+            })),
+            minParticipants: values.min,
+            maxParticipants: values.max
         };
 
         try {

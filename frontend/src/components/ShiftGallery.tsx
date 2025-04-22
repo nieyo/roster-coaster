@@ -1,4 +1,4 @@
-import {Flex, Form, TableProps} from "antd";
+import {Flex, Form, TableProps, Tag} from "antd";
 import React, {useState} from "react";
 import AddUserModal from "./AddUserModal.tsx";
 import ShiftTableColumns from "./ShiftTableColumns.tsx";
@@ -93,6 +93,13 @@ export default function ShiftGallery(props: Readonly<ShiftGalleryProps>) {
 
             <Flex gap={20} vertical>
                 <EventCard isDarkMode={props.isDarkMode} toggleTheme={props.toggleTheme}/>
+                <Flex
+                    justify={"center"}
+                >
+                    <Tag bordered color={"red"}>{"Helfer benötigt"}</Tag>
+                    <Tag bordered color={"green"}>{"Ausreichend"}</Tag>
+                    <Tag bordered color={"green-inverse"}>{"Maximum"}</Tag>
+                </Flex>
                 <ShiftCard
                     selectedRowKeys={selectedRowKeys}
                     setShiftModalVisible={setShiftModalVisible}
