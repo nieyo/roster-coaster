@@ -1,7 +1,9 @@
 package com.github.nieyo.model;
 
 import jakarta.validation.constraints.NotEmpty;
+import lombok.Builder;
 
+@Builder
 public record ShiftDurationDTO(
         @NotEmpty(message = "Shift start time must not be empty")
         String start, // ISO date string

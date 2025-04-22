@@ -3,9 +3,11 @@ package com.github.nieyo.model;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 
 import java.util.List;
 
+@Builder
 public record ShiftDTO(
         @NotEmpty(message = "Shift ID must not be empty")
         String id,
@@ -15,5 +17,8 @@ public record ShiftDTO(
         ShiftDurationDTO duration,
 
         @NotNull(message = "Participants list must not be null")
-        List<@Valid UserDTO> participants
+        List<@Valid UserDTO> participants,
+
+        int minParticipants,
+        int maxParticipants
 ) {}

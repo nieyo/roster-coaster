@@ -154,8 +154,17 @@ class ShiftControllerTest {
 
     @Test
     void getShifts_whenFound_returnShifts() throws Exception {
-        Shift shift1 = new Shift("1", duration, participants);
-        Shift shift2 = new Shift("2", duration, participants);
+        Shift shift1 = Shift.builder()
+                .id("1")
+                .duration(duration)
+                .participants(participants)
+                .build();
+
+        Shift shift2 = Shift.builder()
+                .id("2")
+                .duration(duration)
+                .participants(participants)
+                .build();
 
         shiftRepository.save(shift1);
         shiftRepository.save(shift2);
@@ -190,7 +199,12 @@ class ShiftControllerTest {
     @Test
     void getShiftById_whenIdExists_returnShift() throws Exception {
         String existingId = "34";
-        Shift expected = new Shift(existingId, duration, participants);
+        Shift expected = Shift.builder()
+                .id(existingId)
+                .duration(duration)
+                .participants(participants)
+                .build();
+
         shiftRepository.save(expected);
         // WHEN
         mvc.perform(get("/api/shift/34").contentType(MediaType.APPLICATION_JSON))
@@ -221,7 +235,12 @@ class ShiftControllerTest {
     @DirtiesContext
     void updateShift_whenFound_returnShift() throws Exception {
         // GIVEN
-        Shift shift = new Shift("1", duration, participants);
+        Shift shift = Shift.builder()
+                .id("1")
+                .duration(duration)
+                .participants(participants)
+                .build();
+
         shiftRepository.save(shift);
         // WHEN
         mvc.perform(put("/api/shift/1").contentType(MediaType.APPLICATION_JSON).content("""
@@ -272,7 +291,12 @@ class ShiftControllerTest {
     @DirtiesContext
     void updateShift_whenIdDoesNotMatch_throwIllegalArgumentException() throws Exception {
         // GIVEN
-        Shift shift = new Shift("1", duration, participants);
+        Shift shift = Shift.builder()
+                .id("1")
+                .duration(duration)
+                .participants(participants)
+                .build();
+
         shiftRepository.save(shift);
         // WHEN
         mvc.perform(put("/api/shift/1").contentType(MediaType.APPLICATION_JSON).content("""
@@ -296,7 +320,12 @@ class ShiftControllerTest {
     @DirtiesContext
     void deleteShift_whenFound_removesShift() throws Exception {
         // GIVEN
-        Shift shiftToDelete = new Shift("1", duration, participants);
+        Shift shiftToDelete = Shift.builder()
+                .id("1")
+                .duration(duration)
+                .participants(participants)
+                .build();
+
         shiftRepository.save(shiftToDelete);
 
         // WHEN & THEN

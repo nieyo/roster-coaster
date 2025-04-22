@@ -9,4 +9,6 @@ export interface ShiftFormValues {
     name?: string;
     participants?: string[];
     formName: string;
+    min: number;
+    max: number;
 }
