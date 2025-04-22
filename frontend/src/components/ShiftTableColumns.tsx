@@ -21,15 +21,10 @@ export default function ShiftTableColumns(props: Readonly<ShiftTableColumnsProps
             sortDirections: ["ascend", "descend", "ascend"],
             showSorterTooltip: false,
             render: (record: ShiftDTO) => (
-                <>
-                    <Text>
-                        {dayjs(record.duration.start).format("DD.MM.")}
-                    </Text>
-                    <Text>
-                        {dayjs(record.duration.start).format("HH:mm")} -{" "}
-                        {dayjs(record.duration.end).format("HH:mm")}
-                    </Text>
-                </>
+                <Text>
+                    {dayjs(record.duration.start).format("HH:mm")} -{" "}
+                    {dayjs(record.duration.end).format("HH:mm")}
+                </Text>
             )
         },
         {

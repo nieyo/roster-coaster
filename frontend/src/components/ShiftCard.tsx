@@ -1,6 +1,6 @@
-import React, {JSX} from 'react';
-import {Card, Space, Button, Table, Popconfirm} from 'antd';
-import {PlusOutlined, EditOutlined, DeleteOutlined, QuestionCircleOutlined} from '@ant-design/icons';
+import React, {JSX} from "react";
+import {Card, Space, Button, Table, Popconfirm, Typography} from "antd";
+import {PlusOutlined, EditOutlined, DeleteOutlined, QuestionCircleOutlined} from "@ant-design/icons";
 import {TableRowSelection} from "antd/es/table/interface";
 import {ShiftDTO} from "../types/dto/ShiftDTO.ts";
 
@@ -23,6 +23,9 @@ interface ShiftTableCardProps {
 }
 
 export default function ShiftCard(props: Readonly<ShiftTableCardProps>) {
+
+    const Text = Typography;
+
     return (
         <Card
             extra={
@@ -56,11 +59,11 @@ export default function ShiftCard(props: Readonly<ShiftTableCardProps>) {
                             title="Auswahl löschen?"
                             // description="Sind Sie sicher?"
                             onConfirm={() => {
-                                props.handleDeleteShifts(props.selectedRowKeys.map(key => key.toString()))
+                                props.handleDeleteShifts(props.selectedRowKeys.map(key => key.toString()));
                             }}
                             okText="Löschen"
                             cancelText="Abbrechen"
-                            icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+                            icon={<QuestionCircleOutlined style={{color: "red"}}/>}
                         >
                             <Button
                                 type="text"
@@ -75,7 +78,7 @@ export default function ShiftCard(props: Readonly<ShiftTableCardProps>) {
                     )}
                 </Space.Compact>
             }
-            title="Essensausgabe"
+            title={<Text>Essensausgabe</Text>}
             variant="outlined"
         >
             <Table<ShiftDTO>
