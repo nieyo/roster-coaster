@@ -16,7 +16,12 @@ class ShiftMapperTest {
         Instant end = Instant.parse("2025-04-18T16:00:00Z");
         ShiftDuration duration = new ShiftDuration(start, end);
         List<User> participants = List.of(new User("Alice"), new User("Bob"));
-        Shift shift = new Shift("shift-1", duration, participants);
+        Shift shift = Shift.builder()
+                .id("shift-1")
+                .duration(duration)
+                .participants(participants)
+                .build();
+
 
         ShiftDTO dto = ShiftMapper.toShiftDto(shift);
 
@@ -34,7 +39,11 @@ class ShiftMapperTest {
         Instant end = Instant.parse("2025-04-18T16:00:00Z");
         ShiftDuration duration = new ShiftDuration(start, end);
         List<User> participants = List.of(new User("Alice"));
-        Shift shift = new Shift("any-id", duration, participants);
+        Shift shift = Shift.builder()
+                .id("any-id")
+                .duration(duration)
+                .participants(participants)
+                .build();
 
         CreateShiftDTO dto = ShiftMapper.toCreateShiftDto(shift);
 
@@ -52,7 +61,11 @@ class ShiftMapperTest {
         String end = "2025-04-18T16:00:00Z";
         ShiftDurationDTO durationDTO = new ShiftDurationDTO(start, end);
         List<UserDTO> participants = List.of(new UserDTO("Alice"), new UserDTO("Bob"));
-        ShiftDTO dto = new ShiftDTO(id, durationDTO, participants);
+        ShiftDTO dto = ShiftDTO.builder()
+                .id(id)
+                .duration(durationDTO)
+                .participants(participants)
+                .build();
 
         Shift shift = ShiftMapper.toShift(dto);
 
@@ -71,7 +84,10 @@ class ShiftMapperTest {
         String end = "2025-04-18T16:00:00Z";
         ShiftDurationDTO durationDTO = new ShiftDurationDTO(start, end);
         List<UserDTO> participants = List.of(new UserDTO("Alice"));
-        CreateShiftDTO dto = new CreateShiftDTO(durationDTO, participants);
+        CreateShiftDTO dto = CreateShiftDTO.builder()
+                .duration(durationDTO)
+                .participants(participants)
+                .build();
 
         Shift shift = ShiftMapper.toShift(dto, id);
 
@@ -87,7 +103,11 @@ class ShiftMapperTest {
         Instant start = Instant.parse("2025-04-18T08:00:00Z");
         Instant end = Instant.parse("2025-04-18T16:00:00Z");
         ShiftDuration duration = new ShiftDuration(start, end);
-        Shift shift = new Shift("shift-2", duration, List.of());
+        Shift shift = Shift.builder()
+                .id("shift-2")
+                .duration(duration)
+                .participants(List.of())
+                .build();
 
         ShiftDTO dto = ShiftMapper.toShiftDto(shift);
 
@@ -101,7 +121,11 @@ class ShiftMapperTest {
         String start = "2025-04-18T08:00:00Z";
         String end = "2025-04-18T16:00:00Z";
         ShiftDurationDTO durationDTO = new ShiftDurationDTO(start, end);
-        ShiftDTO dto = new ShiftDTO(id, durationDTO, List.of());
+        ShiftDTO dto = ShiftDTO.builder()
+                .id(id)
+                .duration(durationDTO)
+                .participants(List.of())
+                .build();
 
         Shift shift = ShiftMapper.toShift(dto);
 

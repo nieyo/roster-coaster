@@ -2,9 +2,11 @@ package com.github.nieyo.model;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 
 import java.util.List;
 
+@Builder
 public record CreateShiftDTO(
         @NotNull(message = "Duration is mandatory")
         @Valid
@@ -12,10 +14,6 @@ public record CreateShiftDTO(
 
         @NotNull(message = "Participants must not be null")
         List<@Valid UserDTO> participants,
-
+        int minParticipants,
         int maxParticipants
-) {
-        public CreateShiftDTO(@Valid ShiftDurationDTO duration, @Valid List<UserDTO> participants) {
-                this(duration, participants, 0);
-        }
-}
+) {}

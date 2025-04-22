@@ -32,7 +32,11 @@ class ShiftValidatorTest {
 
     @Test
     void validateShift_doesNotThrowException_whenShiftIsValid() {
-        Shift validShift = new Shift(null, duration, participants);
+        Shift validShift = Shift.builder()
+                .id(null)
+                .duration(duration)
+                .participants(participants)
+                .build();
         assertDoesNotThrow(() -> shiftValidator.validateShift(validShift));
     }
 
@@ -43,8 +47,16 @@ class ShiftValidatorTest {
 
     @Test
     void validateShift_throwsException_whenRequiredFieldIsNull() {
-        Shift invalidShiftNoStart = new Shift(null, duration.withStart(null), List.of());
-        Shift invalidShiftNoEnd = new Shift(null, duration.withEnd(null), List.of());
+        Shift invalidShiftNoStart = Shift.builder()
+                .id(null)
+                .duration(duration.withStart(null))
+                .participants(List.of())
+                .build();
+        Shift invalidShiftNoEnd = Shift.builder()
+                .id(null)
+                .duration(duration.withEnd(null))
+                .participants(List.of())
+                .build();
 
         assertThrows(NullPointerException.class, () -> shiftValidator.validateShift(invalidShiftNoStart));
         assertThrows(NullPointerException.class, () -> shiftValidator.validateShift(invalidShiftNoEnd));
@@ -52,34 +64,52 @@ class ShiftValidatorTest {
 
     @Test
     void validateShift_throwsException_whenEndTimeBeforeStartTime() {
-        Shift invalidShift = new Shift(null, duration.withStart(endTime).withEnd(startTime), List.of());
+        Shift invalidShift = Shift.builder()
+                .id(null)
+                .duration(duration.withStart(endTime).withEnd(startTime))
+                .participants(List.of())
+                .build();
 
         assertThrows(IllegalArgumentException.class, () -> shiftValidator.validateShift(invalidShift));
     }
 
     @Test
     void validateShift_throwsException_whenStartTimeIsInThePast() {
-        Shift shiftInPast = new Shift(null, duration.withStart(now.minus(Duration.ofDays(1))), List.of());
+        Shift shiftInPast = Shift.builder()
+                .id(null)
+                .duration(duration.withStart(now.minus(Duration.ofDays(1))))
+                .participants(List.of())
+                .build();
         assertThrows(IllegalArgumentException.class, () -> shiftValidator.validateShift(shiftInPast));
     }
 
     @Test
     void validateShift_throwsException_whenDurationIsUnderMinimum() {
-        Shift shiftWithShortDuration = new Shift(
-                null,
-                duration.withEnd(endTime.minus(Duration.ofMinutes(25))),
-                List.of()
-        );
+        Shift shiftWithShortDuration = Shift.builder()
+                .id(null)
+                .duration(duration.withEnd(endTime.minus(Duration.ofMinutes(25))))
+                .participants(List.of())
+                .build();
 
         assertThrows(IllegalArgumentException.class, () -> shiftValidator.validateShift(shiftWithShortDuration));
     }
 
     @Test
     void validateShift_throwsException_whenShiftOverlapsWithExistingShift() {
-        Shift overlappingShift = new Shift(null, duration, List.of());
+        Shift overlappingShift = Shift.builder()
+                .id(null)
+                .duration(duration)
+                .participants(List.of())
+                .build();
 
         when(shiftRepository.findOverlappingShifts(startTime, endTime))
-                .thenReturn(List.of(new Shift("existingId", duration, List.of())));
+                .thenReturn(List.of(
+                        Shift.builder()
+                                .id("existingId")
+                                .duration(duration)
+                                .participants(List.of())
+                                .build()
+                ));
 
         assertThrows(IllegalArgumentException.class, () -> shiftValidator.validateShift(overlappingShift));
         verify(shiftRepository).findOverlappingShifts(startTime, endTime);
