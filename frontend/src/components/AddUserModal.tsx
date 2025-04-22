@@ -7,7 +7,7 @@ interface AddUserModalProps {
     visible: boolean;
     onCancel: () => void;
     onSubmit: (values: ShiftFormValues) => void;
-    form: FormInstance; // Verwende den korrekten Form-Typ, falls vorhanden
+    form: FormInstance;
     selectedShift?: ShiftDTO;
 }
 

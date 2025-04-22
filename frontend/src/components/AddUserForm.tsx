@@ -6,7 +6,7 @@ import {ShiftFormValues} from "../types/form/ShiftFormValues.ts";
 interface AddUserFormProps {
     onSubmit: (values: ShiftFormValues) => void,
     form: FormInstance,
-    selectedShift: ShiftDTO
+    selectedShift?: ShiftDTO
 }
 
 export default function AddUserForm(props: Readonly<AddUserFormProps>) {
@@ -37,7 +37,7 @@ export default function AddUserForm(props: Readonly<AddUserFormProps>) {
                             validator: (_, value) => {
                                 if (!value) return Promise.resolve();
 
-                                const hasDuplicate = props.selectedShift.participants
+                                const hasDuplicate = props.selectedShift?.participants
                                     .some(user => user.name.trim().toLowerCase() === value.trim().toLowerCase());
 
                                 return hasDuplicate
