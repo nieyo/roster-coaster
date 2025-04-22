@@ -1,5 +1,6 @@
-import { Card, Space, Button } from 'antd';
-import { SunOutlined, MoonOutlined } from '@ant-design/icons';
+import {Button, Card, Space} from "antd";
+import {MoonOutlined, SunOutlined} from "@ant-design/icons";
+
 
 interface EventCardProps {
     isDarkMode: boolean;
@@ -12,12 +13,15 @@ export default function EventCard(props: Readonly<EventCardProps>) {
             title="Sommerfest"
             extra={
                 <Space>
-                    <Space.Compact>
-                        <Button onClick={() => {}}>Add Task</Button>
-                        <Button onClick={() => {}}>Delete Task</Button>
-                        <Button onClick={() => {}}>Update Task</Button>
-                    </Space.Compact>
-                    <Button icon={props.isDarkMode ? <SunOutlined /> : <MoonOutlined />} onClick={props.toggleTheme} />
+                    {/*<Space.Compact>*/}
+                    {/*    <Button onClick={() => {*/}
+                    {/*    }}>Add Task</Button>*/}
+                    {/*    <Button onClick={() => {*/}
+                    {/*    }}>Delete Task</Button>*/}
+                    {/*    <Button onClick={() => {*/}
+                    {/*    }}>Update Task</Button>*/}
+                    {/*</Space.Compact>*/}
+                    <Button icon={props.isDarkMode ? <SunOutlined/> : <MoonOutlined/>} onClick={props.toggleTheme}/>
                 </Space>
             }
         />

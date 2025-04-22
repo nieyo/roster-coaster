@@ -82,6 +82,11 @@ export default function ShiftForm(props: Readonly<ShiftFormProps>) {
                                     .second(0)
                                     .millisecond(0);
 
+                                const now = dayjs();
+                                if (newShiftStart.isBefore(now) || newShiftEnd.isBefore(now)) {
+                                    return Promise.reject(new Error("Der Zeitraum darf nicht in der Vergangenheit liegen"));
+                                }
+
                                 const currentId: string | undefined = form.getFieldValue('id');
 
                                 const overlapExists = props.shifts.some(existingShift => {
@@ -89,8 +94,6 @@ export default function ShiftForm(props: Readonly<ShiftFormProps>) {
                                     return newShiftStart.isBefore(dayjs(existingShift.duration.end)) &&
                                         newShiftEnd.isAfter(dayjs(existingShift.duration.start));
                                 });
-
-                                console.log("Overlap exists:", overlapExists);
 
                                 return overlapExists
                                     ? Promise.reject(new Error("Der Zeitraum überschneidet sich mit einer bestehenden Schicht"))
