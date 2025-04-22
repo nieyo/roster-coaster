@@ -11,5 +11,11 @@ public record CreateShiftDTO(
         ShiftDurationDTO duration,
 
         @NotNull(message = "Participants must not be null")
-        List<@Valid UserDTO> participants
-) {}
+        List<@Valid UserDTO> participants,
+
+        int maxParticipants
+) {
+        public CreateShiftDTO(@Valid ShiftDurationDTO duration, @Valid List<UserDTO> participants) {
+                this(duration, participants, 0);
+        }
+}

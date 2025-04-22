@@ -5,7 +5,8 @@ import java.time.Instant;
 
 public class ShiftMapper {
 
-    private ShiftMapper() {}
+    private ShiftMapper() {
+    }
 
     public static ShiftDTO toShiftDto(Shift shift) {
         return new ShiftDTO(
@@ -16,7 +17,8 @@ public class ShiftMapper {
                 ),
                 shift.participants().stream()
                         .map(user -> new UserDTO(user.name()))
-                        .toList()
+                        .toList(),
+                shift.maxParticipants()
         );
     }
 
@@ -28,7 +30,9 @@ public class ShiftMapper {
                 ),
                 shift.participants().stream()
                         .map(user -> new UserDTO(user.name()))
-                        .toList()
+                        .toList(),
+                shift.maxParticipants()
+
         );
     }
 
@@ -41,7 +45,8 @@ public class ShiftMapper {
                 ),
                 dto.participants().stream()
                         .map(userDto -> new User(userDto.name()))
-                        .toList()
+                        .toList(),
+                dto.maxParticipants()
         );
     }
 
@@ -54,7 +59,8 @@ public class ShiftMapper {
                 ),
                 dto.participants().stream()
                         .map(userDto -> new User(userDto.name()))
-                        .toList()
+                        .toList(),
+                dto.maxParticipants()
         );
     }
 }
