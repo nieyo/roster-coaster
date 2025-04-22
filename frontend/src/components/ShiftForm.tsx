@@ -65,9 +65,9 @@ export default function ShiftForm(props: Readonly<ShiftFormProps>) {
                     name="duration"
                     label="Zeitraum"
                     rules={[
-                        {required: true, message: "Zeitraum is required"},
+                        {required: true, message: "Kein gültiger Zeitraum"},
                         {
-                            validator: (_, value) => { // day is important
+                            validator: (_, value) => {
                                 if (!value || value.length !== 2) return Promise.resolve();
 
                                 const newShiftStart: Dayjs = form.getFieldValue('eventDate')
@@ -113,10 +113,12 @@ export default function ShiftForm(props: Readonly<ShiftFormProps>) {
                     <Form.Item
                         name="participants"
                         label="Helfer"
+                        extra={"Jeder Name kann nur einmal eingegeben werden."}
                         labelCol={{span: 24}}
                         wrapperCol={{span: 24}}
                     >
                         <Select
+                            open={false}
                             mode="tags"
                             style={{width: "100%"}}
                             placeholder="Namen eingeben"

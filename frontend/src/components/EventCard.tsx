@@ -9,7 +9,7 @@ interface EventCardProps {
 export default function EventCard(props: Readonly<EventCardProps>) {
     return (
         <Card
-            title="Event"
+            title="Sommerfest"
             extra={
                 <Space>
                     <Space.Compact>
