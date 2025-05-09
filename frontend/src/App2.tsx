@@ -1,15 +1,13 @@
 import {Route, Routes} from "react-router-dom";
 import {LoginForm} from "@/components/login-form"
 import {ThemeProvider} from "./components/theme-provider";
-import {ModeToggle} from "@/components/mode-toggle.tsx";
 import {RegisterForm} from "@/components/register-form.tsx";
 import {ForgotPasswordForm} from "@/components/ForgotPasswordForm.tsx";
+import ProtectedRoute from "@/components/ProtectedRoute.tsx";
 
 export default function App2() {
     return (
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-            <ModeToggle/>
-
             <Routes>
 
                 <Route path={"/login"} element={
@@ -34,6 +32,12 @@ export default function App2() {
                             <ForgotPasswordForm/>
                         </div>
                     </div>
+                }/>
+
+                <Route path="/home" element={
+                    <ProtectedRoute>
+                        <p>Test, should not be visible</p>
+                    </ProtectedRoute>
                 }/>
 
             </Routes>

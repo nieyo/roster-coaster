@@ -10,6 +10,7 @@ import {
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {Link} from "react-router-dom";
+import {ModeToggle} from "@/components/mode-toggle.tsx";
 
 export function LoginForm({
                               className,
@@ -17,6 +18,9 @@ export function LoginForm({
                           }: React.ComponentProps<"div">) {
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
+            <div className="absolute top-4 right-4">
+                <ModeToggle />
+            </div>
             <Card>
                 <CardHeader>
                     <CardTitle>Login to your account</CardTitle>

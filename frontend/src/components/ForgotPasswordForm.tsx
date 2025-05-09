@@ -4,6 +4,7 @@ import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {Link} from "react-router-dom";
 import {cn} from "@/lib/utils.ts";
+import {ModeToggle} from "@/components/mode-toggle.tsx";
 
 export function ForgotPasswordForm({
                                        className,
@@ -12,6 +13,9 @@ export function ForgotPasswordForm({
 
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
+            <div className="absolute top-4 right-4">
+                <ModeToggle />
+            </div>
             <Card>
                 <CardHeader>
                     <CardTitle>Recover Password</CardTitle>

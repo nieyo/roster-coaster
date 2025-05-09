@@ -10,6 +10,7 @@ import {
 import {Input} from "@/components/ui/input.tsx"
 import {Label} from "@/components/ui/label.tsx"
 import {Link} from "react-router-dom";
+import {ModeToggle} from "@/components/mode-toggle.tsx";
 
 export function RegisterForm({
                               className,
@@ -17,6 +18,9 @@ export function RegisterForm({
                           }: React.ComponentProps<"div">) {
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
+            <div className="absolute top-4 right-4">
+                <ModeToggle />
+            </div>
             <Card>
                 <CardHeader>
                     <CardTitle>Register a new Account</CardTitle>
