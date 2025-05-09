@@ -1,6 +1,6 @@
 package com.github.nieyo.service;
 
-import com.github.nieyo.model.*;
+import com.github.nieyo.model.shift.*;
 import com.github.nieyo.repository.ShiftRepository;
 import com.github.nieyo.validation.ShiftValidator;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ class ShiftServiceTest {
     Instant endTime = startTime.plus(Duration.ofMinutes(30));
     ShiftDuration duration = new ShiftDuration(startTime, endTime);
     ShiftDurationDTO durationDTO = new ShiftDurationDTO(startTime.toString(), endTime.toString());
-    List<User> participants = List.of();
+    List<ShiftSignup> signups = List.of();
 
 
     // CREATE
@@ -40,7 +40,7 @@ class ShiftServiceTest {
         // GIVEN
         CreateShiftDTO inputShift = CreateShiftDTO.builder()
                 .duration(durationDTO)
-                .participants(List.of())
+                .signups(List.of())
                 .build();
 
         String expectedId = "generated-id";
@@ -49,7 +49,7 @@ class ShiftServiceTest {
         Shift expected = Shift.builder()
                 .id(expectedId)
                 .duration(duration)
-                .participants(participants)
+                .signups(signups)
                 .build();
 
         when(shiftRepository.save(any(Shift.class))).thenReturn(expected);
@@ -64,7 +64,7 @@ class ShiftServiceTest {
         assertEquals(expected.id(), actual.id());
         assertEquals(expected.duration().start(), actual.duration().start());
         assertEquals(expected.duration().end(), actual.duration().end());
-        assertEquals(expected.participants(), actual.participants());
+        assertEquals(expected.signups(), actual.signups());
     }
 
     @Test
@@ -86,7 +86,7 @@ class ShiftServiceTest {
                                 .end(endTime.toString())
                                 .build()
                 )
-                .participants(List.of())
+                .signups(List.of())
                 .build();
 
         CreateShiftDTO invalidShiftNoEnd = CreateShiftDTO.builder()
@@ -96,7 +96,7 @@ class ShiftServiceTest {
                                 .end(null)
                                 .build()
                 )
-                .participants(List.of())
+                .signups(List.of())
                 .build();
 
         assertThrows(NullPointerException.class, () -> shiftService.saveShift(invalidShiftNoStart));
@@ -115,7 +115,7 @@ class ShiftServiceTest {
                                 .end(startTime.toString()) // wrong order: start as end
                                 .build()
                 )
-                .participants(List.of())
+                .signups(List.of())
                 .build();
 
         assertThrows(IllegalArgumentException.class, () -> shiftService.saveShift(invalidShift));
@@ -144,17 +144,17 @@ class ShiftServiceTest {
                 Shift.builder()
                         .id("1")
                         .duration(duration)
-                        .participants(participants)
+                        .signups(signups)
                         .build(),
                 Shift.builder()
                         .id("2")
                         .duration(duration)
-                        .participants(participants)
+                        .signups(signups)
                         .build(),
                 Shift.builder()
                         .id("3")
                         .duration(duration)
-                        .participants(participants)
+                        .signups(signups)
                         .build()
         );
         when(shiftRepository.findAll()).thenReturn(expected);
@@ -174,7 +174,7 @@ class ShiftServiceTest {
                 Shift.builder()
                         .id(existingId)
                         .duration(duration)
-                        .participants(participants)
+                        .signups(signups)
                         .build()
         );
         when(shiftRepository.findById(existingId)).thenReturn(expected);
@@ -210,7 +210,7 @@ class ShiftServiceTest {
         Shift expected = Shift.builder()
                 .id("2")
                 .duration(duration.withEnd(endTime.plusSeconds(3600)))
-                .participants(participants)
+                .signups(signups)
                 .build();
         when(shiftRepository.existsById(targetId)).thenReturn(true);
         when(shiftRepository.save(expected)).thenReturn(expected);
@@ -224,7 +224,7 @@ class ShiftServiceTest {
         assertEquals(expected.id(), actual.id());
         assertEquals(expected.duration().start(), actual.duration().start());
         assertEquals(expected.duration().end(), actual.duration().end());
-        assertEquals(expected.participants(), actual.participants());
+        assertEquals(expected.signups(), actual.signups());
     }
 
     @Test
@@ -233,7 +233,7 @@ class ShiftServiceTest {
         Shift updatedShift = Shift.builder()
                 .id(targetId)
                 .duration(duration)
-                .participants(participants)
+                .signups(signups)
                 .build();
         when(shiftRepository.existsById(targetId)).thenReturn(false);
 
@@ -249,7 +249,7 @@ class ShiftServiceTest {
         Shift updatedShift = Shift.builder()
                 .id("notMatchingId")
                 .duration(duration)
-                .participants(participants)
+                .signups(signups)
                 .build();
         when(shiftRepository.existsById(targetId)).thenReturn(true);
         when(shiftRepository.save(updatedShift)).thenReturn(updatedShift);

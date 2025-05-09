@@ -1,4 +1,4 @@
-package com.github.nieyo.model;
+package com.github.nieyo.model.shift;
 
 import java.time.Instant;
 
@@ -15,9 +15,9 @@ public class ShiftMapper {
                         shift.duration().start().toString(),
                         shift.duration().end().toString()
                 ))
-                .participants(
-                        shift.participants().stream()
-                                .map(user -> new UserDTO(user.name()))
+                .signups(
+                        shift.signups().stream()
+                                .map(signup -> new ShiftSignup(signup.name(), signup.email(), signup.userId(), signup.signedUpAt()))
                                 .toList()
                 )
                 .minParticipants(shift.minParticipants()) // Include if ShiftDTO has this field
@@ -31,9 +31,9 @@ public class ShiftMapper {
                         shift.duration().start().toString(),
                         shift.duration().end().toString()
                 ))
-                .participants(
-                        shift.participants().stream()
-                                .map(user -> new UserDTO(user.name()))
+                .signups(
+                        shift.signups().stream()
+                                .map(signup -> new ShiftSignup(signup.name(), signup.email(), signup.userId(), signup.signedUpAt()))
                                 .toList()
                 )
                 .minParticipants(shift.minParticipants())
@@ -49,9 +49,9 @@ public class ShiftMapper {
                         Instant.parse(dto.duration().start()),
                         Instant.parse(dto.duration().end())
                 ))
-                .participants(
-                        dto.participants().stream()
-                                .map(userDto -> new User(userDto.name()))
+                .signups(
+                        dto.signups().stream()
+                                .map(signup -> new ShiftSignup(signup.name(), signup.email(), signup.userId(), signup.signedUpAt()))
                                 .toList()
                 )
                 .minParticipants(dto.minParticipants())
@@ -67,9 +67,9 @@ public class ShiftMapper {
                         Instant.parse(dto.duration().start()),
                         Instant.parse(dto.duration().end())
                 ))
-                .participants(
-                        dto.participants().stream()
-                                .map(userDto -> new User(userDto.name()))
+                .signups(
+                        dto.signups().stream()
+                                .map(signup -> new ShiftSignup(signup.name(), signup.email(), signup.userId(), signup.signedUpAt()))
                                 .toList()
                 )
                 .minParticipants(dto.minParticipants())

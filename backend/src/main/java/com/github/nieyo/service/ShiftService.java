@@ -1,8 +1,8 @@
 package com.github.nieyo.service;
 
-import com.github.nieyo.model.CreateShiftDTO;
-import com.github.nieyo.model.Shift;
-import com.github.nieyo.model.ShiftMapper;
+import com.github.nieyo.model.shift.CreateShiftDTO;
+import com.github.nieyo.model.shift.Shift;
+import com.github.nieyo.model.shift.ShiftMapper;
 import com.github.nieyo.repository.ShiftRepository;
 import com.github.nieyo.validation.ShiftValidator;
 import lombok.RequiredArgsConstructor;

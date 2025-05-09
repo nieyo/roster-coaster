@@ -1,8 +1,8 @@
 package com.github.nieyo.validation;
 
-import com.github.nieyo.model.Shift;
-import com.github.nieyo.model.ShiftDuration;
-import com.github.nieyo.model.User;
+import com.github.nieyo.model.shift.Shift;
+import com.github.nieyo.model.shift.ShiftDuration;
+import com.github.nieyo.model.shift.ShiftSignup;
 import com.github.nieyo.repository.ShiftRepository;
 import org.junit.jupiter.api.Test;
 
@@ -28,14 +28,14 @@ class ShiftValidatorTest {
     Instant endTime = startTime.plus(Duration.ofMinutes(30));
     ShiftDuration duration = new ShiftDuration(startTime, endTime);
 
-    List<User> participants = List.of();
+    List<ShiftSignup> signups = List.of();
 
     @Test
     void validateShift_doesNotThrowException_whenShiftIsValid() {
         Shift validShift = Shift.builder()
                 .id(null)
                 .duration(duration)
-                .participants(participants)
+                .signups(signups)
                 .build();
         assertDoesNotThrow(() -> shiftValidator.validateShift(validShift));
     }
@@ -50,12 +50,12 @@ class ShiftValidatorTest {
         Shift invalidShiftNoStart = Shift.builder()
                 .id(null)
                 .duration(duration.withStart(null))
-                .participants(List.of())
+                .signups(List.of())
                 .build();
         Shift invalidShiftNoEnd = Shift.builder()
                 .id(null)
                 .duration(duration.withEnd(null))
-                .participants(List.of())
+                .signups(List.of())
                 .build();
 
         assertThrows(NullPointerException.class, () -> shiftValidator.validateShift(invalidShiftNoStart));
@@ -67,7 +67,7 @@ class ShiftValidatorTest {
         Shift invalidShift = Shift.builder()
                 .id(null)
                 .duration(duration.withStart(endTime).withEnd(startTime))
-                .participants(List.of())
+                .signups(List.of())
                 .build();
 
         assertThrows(IllegalArgumentException.class, () -> shiftValidator.validateShift(invalidShift));
@@ -78,7 +78,7 @@ class ShiftValidatorTest {
         Shift shiftInPast = Shift.builder()
                 .id(null)
                 .duration(duration.withStart(now.minus(Duration.ofDays(1))))
-                .participants(List.of())
+                .signups(List.of())
                 .build();
         assertThrows(IllegalArgumentException.class, () -> shiftValidator.validateShift(shiftInPast));
     }
@@ -88,7 +88,7 @@ class ShiftValidatorTest {
         Shift shiftWithShortDuration = Shift.builder()
                 .id(null)
                 .duration(duration.withEnd(endTime.minus(Duration.ofMinutes(25))))
-                .participants(List.of())
+                .signups(List.of())
                 .build();
 
         assertThrows(IllegalArgumentException.class, () -> shiftValidator.validateShift(shiftWithShortDuration));
@@ -99,7 +99,7 @@ class ShiftValidatorTest {
         Shift overlappingShift = Shift.builder()
                 .id(null)
                 .duration(duration)
-                .participants(List.of())
+                .signups(List.of())
                 .build();
 
         when(shiftRepository.findOverlappingShifts(startTime, endTime))
@@ -107,7 +107,7 @@ class ShiftValidatorTest {
                         Shift.builder()
                                 .id("existingId")
                                 .duration(duration)
-                                .participants(List.of())
+                                .signups(List.of())
                                 .build()
                 ));
 
