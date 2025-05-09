@@ -1,4 +1,4 @@
-package com.github.nieyo;
+package com.github.nieyo.security;
 
 import com.github.nieyo.entity.User;
 import org.springframework.security.core.GrantedAuthority;

@@ -1,8 +1,8 @@
 package com.github.nieyo.service;
 
-import com.github.nieyo.UserDetailsAdapter;
 import com.github.nieyo.entity.User;
 import com.github.nieyo.repository.UserRepository;
+import com.github.nieyo.security.UserDetailsAdapter;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
