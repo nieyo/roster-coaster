@@ -1,5 +1,6 @@
-package com.github.nieyo.model.shift;
+package com.github.nieyo.dto;
 
+import com.github.nieyo.entity.ShiftSignup;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;

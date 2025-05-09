@@ -1,6 +1,6 @@
 package com.github.nieyo.validation;
 
-import com.github.nieyo.model.shift.Shift;
+import com.github.nieyo.entity.Shift;
 import com.github.nieyo.repository.ShiftRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -55,10 +55,19 @@ public class ShiftValidator {
     private void validateNoOverlap(Shift shift) {
         List<Shift> overlappingShifts;
 
-        if (shift.id() == null || shift.id().isEmpty()) {
-            overlappingShifts = shiftRepository.findOverlappingShifts(shift.duration().start(), shift.duration().end());
+        if (shift.id() == null) {
+            // Neuer Shift (noch keine ID)
+            overlappingShifts = shiftRepository.findOverlappingShifts(
+                    shift.duration().start(),
+                    shift.duration().end()
+            );
         } else {
-            overlappingShifts = shiftRepository.findOverlappingShiftsExcludingSelf(shift.duration().start(), shift.duration().end(), shift.id());
+            // Existierender Shift (ID vorhanden)
+            overlappingShifts = shiftRepository.findOverlappingShiftsExcludingSelf(
+                    shift.duration().start(),
+                    shift.duration().end(),
+                    shift.id()
+            );
         }
 
         if (!overlappingShifts.isEmpty()) {

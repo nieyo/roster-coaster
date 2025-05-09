@@ -1,6 +1,14 @@
-package com.github.nieyo.model.shift;
+package com.github.nieyo.mapper;
+
+import com.github.nieyo.dto.ShiftCreateDTO;
+import com.github.nieyo.dto.ShiftDTO;
+import com.github.nieyo.dto.ShiftDurationDTO;
+import com.github.nieyo.entity.Shift;
+import com.github.nieyo.entity.ShiftDuration;
+import com.github.nieyo.entity.ShiftSignup;
 
 import java.time.Instant;
+import java.util.UUID;
 
 
 public class ShiftMapper {
@@ -60,7 +68,7 @@ public class ShiftMapper {
     }
 
 
-    public static Shift toShift(ShiftCreateDTO dto, String id) {
+    public static Shift toShift(ShiftCreateDTO dto, UUID id) {
         return Shift.builder()
                 .id(id)
                 .duration(new ShiftDuration(

@@ -1,7 +1,7 @@
 package com.github.nieyo.controller;
 
-import com.github.nieyo.model.shift.ShiftCreateDTO;
-import com.github.nieyo.model.shift.Shift;
+import com.github.nieyo.dto.ShiftCreateDTO;
+import com.github.nieyo.dto.ShiftDTO;
 import com.github.nieyo.service.ShiftService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/shift")
@@ -21,20 +22,20 @@ public class ShiftController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Shift saveShift(@Valid @RequestBody ShiftCreateDTO shiftToSave) {
+    public ShiftDTO saveShift(@Valid @RequestBody ShiftCreateDTO shiftToSave) {
         return shiftService.saveShift(shiftToSave);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Shift> getShifts() {
+    public List<ShiftDTO> getShifts() {
         return shiftService.getShifts();
     }
 
     @GetMapping("{id}")
-    public Shift getShiftById(@PathVariable String id)
+    public ShiftDTO getShiftById(@PathVariable UUID id)
     {
-        Optional<Shift> shift = shiftService.getShiftById(id);
+        Optional<ShiftDTO> shift = shiftService.getShiftById(id);
         if(shift.isPresent()) {
             return shift.get();
         }
@@ -43,12 +44,12 @@ public class ShiftController {
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Shift updateShift(@PathVariable String id, @Valid @RequestBody Shift shiftToUpdate) {
+    public ShiftDTO updateShift(@PathVariable UUID id, @Valid @RequestBody ShiftDTO shiftToUpdate) {
         return shiftService.updateShift(id, shiftToUpdate);
     }
 
     @DeleteMapping("{id}")
-    public void deleteShiftById(@PathVariable String id) {
+    public void deleteShiftById(@PathVariable UUID id) {
         boolean isDeleted = shiftService.deleteShiftById(id);
         if (!isDeleted)
         {

@@ -1,4 +1,4 @@
-package com.github.nieyo.model.shift;
+package com.github.nieyo.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;

@@ -1,8 +1,8 @@
 package com.github.nieyo.validation;
 
-import com.github.nieyo.model.shift.Shift;
-import com.github.nieyo.model.shift.ShiftDuration;
-import com.github.nieyo.model.shift.ShiftSignup;
+import com.github.nieyo.entity.Shift;
+import com.github.nieyo.entity.ShiftDuration;
+import com.github.nieyo.entity.ShiftSignup;
 import com.github.nieyo.repository.ShiftRepository;
 import org.junit.jupiter.api.Test;
 
@@ -11,6 +11,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -105,7 +106,7 @@ class ShiftValidatorTest {
         when(shiftRepository.findOverlappingShifts(startTime, endTime))
                 .thenReturn(List.of(
                         Shift.builder()
-                                .id("existingId")
+                                .id(UUID.fromString("11111111-1111-1111-1111-111111111111"))
                                 .duration(duration)
                                 .signups(List.of())
                                 .build()

@@ -1,10 +1,10 @@
-package com.github.nieyo.model.user;
+package com.github.nieyo.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record UserRegisterDTO(
+public record RegisterRequest(
         @NotBlank
         String name,
 
@@ -14,9 +14,6 @@ public record UserRegisterDTO(
 
         @NotBlank
         @Size(min = 8, message = "Password must be at least 8 characters")
-        String password,
-
-        @NotBlank
-        String confirmPassword
+        String password
 ) {}
 

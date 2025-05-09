@@ -1,15 +1,26 @@
-package com.github.nieyo.model;
+package com.github.nieyo.mapper;
 
-import com.github.nieyo.model.shift.*;
+import com.github.nieyo.dto.ShiftCreateDTO;
+import com.github.nieyo.dto.ShiftDTO;
+import com.github.nieyo.dto.ShiftDurationDTO;
+import com.github.nieyo.entity.Shift;
+import com.github.nieyo.entity.ShiftDuration;
+import com.github.nieyo.entity.ShiftSignup;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ShiftMapperTest {
+
+    private static final UUID SHIFT1_ID = UUID.fromString("11111111-1111-1111-1111-111111111111");
+    private static final UUID SHIFT2_ID = UUID.fromString("22222222-2222-2222-2222-222222222222");
+    private static final UUID SHIFT3_ID = UUID.fromString("33333333-3333-3333-3333-333333333333");
+
 
     @Test
     void toShiftDto_mapsCorrectly() {
@@ -21,7 +32,7 @@ class ShiftMapperTest {
                 new ShiftSignup("Bob", null, null, Instant.now())
         );
         Shift shift = Shift.builder()
-                .id("shift-1")
+                .id(SHIFT1_ID)
                 .duration(duration)
                 .signups(signups)
                 .build();
@@ -29,7 +40,7 @@ class ShiftMapperTest {
 
         ShiftDTO dto = ShiftMapper.toShiftDto(shift);
 
-        assertEquals("shift-1", dto.id());
+        assertEquals(SHIFT1_ID, dto.id());
         assertEquals(start.toString(), dto.duration().start());
         assertEquals(end.toString(), dto.duration().end());
         assertEquals(2, dto.signups().size());
@@ -44,7 +55,7 @@ class ShiftMapperTest {
         ShiftDuration duration = new ShiftDuration(start, end);
         List<ShiftSignup> signups = List.of(new ShiftSignup("Alice", null, null, Instant.now()));
         Shift shift = Shift.builder()
-                .id("any-id")
+                .id(SHIFT1_ID)
                 .duration(duration)
                 .signups(signups)
                 .build();
@@ -60,7 +71,7 @@ class ShiftMapperTest {
 
     @Test
     void toShift_fromShiftDTO_mapsCorrectly() {
-        String id = "shift-1";
+        UUID id = SHIFT1_ID;
         String start = "2025-04-18T08:00:00Z";
         String end = "2025-04-18T16:00:00Z";
         ShiftDurationDTO durationDTO = new ShiftDurationDTO(start, end);
@@ -86,7 +97,7 @@ class ShiftMapperTest {
 
     @Test
     void toShift_fromCreateShiftDTO_mapsCorrectly() {
-        String id = "shift-1";
+        UUID id = SHIFT1_ID;
         String start = "2025-04-18T08:00:00Z";
         String end = "2025-04-18T16:00:00Z";
         ShiftDurationDTO durationDTO = new ShiftDurationDTO(start, end);
@@ -111,20 +122,20 @@ class ShiftMapperTest {
         Instant end = Instant.parse("2025-04-18T16:00:00Z");
         ShiftDuration duration = new ShiftDuration(start, end);
         Shift shift = Shift.builder()
-                .id("shift-2")
+                .id(SHIFT2_ID)
                 .duration(duration)
                 .signups(List.of())
                 .build();
 
         ShiftDTO dto = ShiftMapper.toShiftDto(shift);
 
-        assertEquals("shift-2", dto.id());
+        assertEquals(SHIFT2_ID, dto.id());
         assertEquals(0, dto.signups().size());
     }
 
     @Test
     void toShift_handlesEmptysignups() {
-        String id = "shift-3";
+        UUID id = SHIFT3_ID;
         String start = "2025-04-18T08:00:00Z";
         String end = "2025-04-18T16:00:00Z";
         ShiftDurationDTO durationDTO = new ShiftDurationDTO(start, end);

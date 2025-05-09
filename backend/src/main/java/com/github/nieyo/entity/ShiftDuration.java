@@ -1,4 +1,4 @@
-package com.github.nieyo.model.shift;
+package com.github.nieyo.entity;
 
 import lombok.With;
 
