@@ -1,4 +1,4 @@
-package com.github.nieyo.model;
+package com.github.nieyo.model.shift;
 
 import lombok.Builder;
 import org.springframework.data.annotation.Id;
@@ -9,7 +9,7 @@ import java.util.List;
 public record Shift(
         @Id String id,
         ShiftDuration duration,
-        List<User> participants,
+        List<ShiftSignup> signups,
         int minParticipants,
         int maxParticipants
 ) {}

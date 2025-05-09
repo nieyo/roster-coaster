@@ -1,7 +1,10 @@
 package com.github.nieyo.controller;
 
 import com.github.nieyo.config.FixedClockConfig;
-import com.github.nieyo.model.*;
+import com.github.nieyo.model.shift.Shift;
+import com.github.nieyo.model.shift.ShiftDuration;
+import com.github.nieyo.model.shift.ShiftDurationDTO;
+import com.github.nieyo.model.shift.ShiftSignup;
 import com.github.nieyo.repository.ShiftRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(classes = FixedClockConfig.class)
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false) // disable authentication
 class ShiftControllerTest {
 
     @Autowired
@@ -38,7 +41,7 @@ class ShiftControllerTest {
     Instant now;
     ShiftDuration duration;
     ShiftDurationDTO durationDTO;
-    List<User> participants = List.of();
+    List<ShiftSignup> signups = List.of();
 
     @BeforeEach
     void setUp() {
@@ -60,7 +63,7 @@ class ShiftControllerTest {
                         "start": "2025-04-01T00:15:00Z",
                         "end": "2025-04-01T00:45:00Z"
                     },
-                    "participants": []
+                    "signups": []
                 }
                 """;
 
@@ -72,15 +75,15 @@ class ShiftControllerTest {
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.duration.start").value(durationDTO.start()))
                 .andExpect(jsonPath("$.duration.end").value(durationDTO.end()))
-                .andExpect(jsonPath("$.participants").isArray())
-                .andExpect(jsonPath("$.participants").isEmpty());
+                .andExpect(jsonPath("$.signups").isArray())
+                .andExpect(jsonPath("$.signups").isEmpty());
 
         // Verify database state
         List<Shift> shifts = shiftRepository.findAll();
         assertEquals(1, shifts.size());
         assertEquals(duration.start(), shifts.getFirst().duration().start());
         assertEquals(duration.end(), shifts.getFirst().duration().end());
-        assertTrue(shifts.getFirst().participants().isEmpty());
+        assertTrue(shifts.getFirst().signups().isEmpty());
     }
 
     @Test
@@ -91,7 +94,7 @@ class ShiftControllerTest {
                         "end": "2025-04-01T00:15:00Z",
                         "start": "2025-04-01T00:45:00Z"
                     },
-                    "participants": []
+                    "signups": []
                 }
                 """;
 
@@ -109,7 +112,7 @@ class ShiftControllerTest {
                         "start": ,
                         "end": "2025-04-01T00:45:00Z"
                     },
-                    "participants": []
+                    "signups": []
                 }
                 """);
     }
@@ -122,7 +125,7 @@ class ShiftControllerTest {
                         "start": "2025-04-01T00:15:00Z",
                         "end": ,
                     },
-                    "participants": []
+                    "signups": []
                 }
                 """);
     }
@@ -157,13 +160,13 @@ class ShiftControllerTest {
         Shift shift1 = Shift.builder()
                 .id("1")
                 .duration(duration)
-                .participants(participants)
+                .signups(signups)
                 .build();
 
         Shift shift2 = Shift.builder()
                 .id("2")
                 .duration(duration)
-                .participants(participants)
+                .signups(signups)
                 .build();
 
         shiftRepository.save(shift1);
@@ -180,7 +183,7 @@ class ShiftControllerTest {
                                     "start": "2025-04-01T00:15:00Z",
                                     "end": "2025-04-01T00:45:00Z"
                                 },
-                                "participants": []
+                                "signups": []
                             },
                             {
                                 "id": "2",
@@ -188,7 +191,7 @@ class ShiftControllerTest {
                                     "start": "2025-04-01T00:15:00Z",
                                     "end": "2025-04-01T00:45:00Z"
                                 },
-                                "participants": []
+                                "signups": []
                             }
                         ]
                         """));
@@ -202,7 +205,7 @@ class ShiftControllerTest {
         Shift expected = Shift.builder()
                 .id(existingId)
                 .duration(duration)
-                .participants(participants)
+                .signups(signups)
                 .build();
 
         shiftRepository.save(expected);
@@ -216,7 +219,7 @@ class ShiftControllerTest {
                                 "start": "2025-04-01T00:15:00Z",
                                 "end": "2025-04-01T00:45:00Z"
                             },
-                            "participants": []
+                            "signups": []
                         }
                         """));
     }
@@ -238,7 +241,7 @@ class ShiftControllerTest {
         Shift shift = Shift.builder()
                 .id("1")
                 .duration(duration)
-                .participants(participants)
+                .signups(signups)
                 .build();
 
         shiftRepository.save(shift);
@@ -250,7 +253,7 @@ class ShiftControllerTest {
                                 "start": "2025-04-01T00:15:00Z",
                                 "end": "2025-04-01T00:45:00Z"
                             },
-                            "participants": []
+                            "signups": []
                         }
                         """))
                 // THEN
@@ -261,7 +264,7 @@ class ShiftControllerTest {
                                 "start": "2025-04-01T00:15:00Z",
                                 "end": "2025-04-01T00:45:00Z"
                             },
-                            "participants": []
+                            "signups": []
                         }
                         """));
     }
@@ -279,7 +282,7 @@ class ShiftControllerTest {
                             "start": "2025-04-01T00:15:00Z",
                             "end": "2025-04-01T00:45:00Z"
                         },
-                        "participants": [{"name": "Alan"}]
+                        "signups": [{"name": "Alan"}]
                         }
                         """))
                 // THEN
@@ -294,7 +297,7 @@ class ShiftControllerTest {
         Shift shift = Shift.builder()
                 .id("1")
                 .duration(duration)
-                .participants(participants)
+                .signups(signups)
                 .build();
 
         shiftRepository.save(shift);
@@ -306,7 +309,7 @@ class ShiftControllerTest {
                                 "start": "2025-04-01T00:15:00Z",
                                 "end": "2025-04-01T00:45:00Z"
                             },
-                            "participants": [{"name": "Alan"}]
+                            "signups": [{"name": "Alan"}]
                           }
                         """))
                 // THEN
@@ -323,7 +326,7 @@ class ShiftControllerTest {
         Shift shiftToDelete = Shift.builder()
                 .id("1")
                 .duration(duration)
-                .participants(participants)
+                .signups(signups)
                 .build();
 
         shiftRepository.save(shiftToDelete);

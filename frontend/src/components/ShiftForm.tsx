@@ -28,7 +28,7 @@ export default function ShiftForm(props: Readonly<ShiftFormProps>) {
                         dayjs(shift.duration.start).startOf("minute"),
                         dayjs(shift.duration.end).startOf("minute")
                     ],
-                    participants: shift.participants.map(user => user.name),
+                    participants: shift.signups.map(user => user.name),
                     min: shift.minParticipants,
                     max: shift.maxParticipants
                 });

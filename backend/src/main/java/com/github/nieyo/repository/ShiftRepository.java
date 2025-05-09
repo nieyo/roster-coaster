@@ -1,6 +1,6 @@
 package com.github.nieyo.repository;
 
-import com.github.nieyo.model.Shift;
+import com.github.nieyo.model.shift.Shift;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;

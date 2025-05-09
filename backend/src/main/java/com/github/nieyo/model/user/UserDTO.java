@@ -1,4 +1,4 @@
-package com.github.nieyo.model;
+package com.github.nieyo.model.user;
 
 import jakarta.validation.constraints.NotEmpty;
 

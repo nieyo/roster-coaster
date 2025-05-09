@@ -1,6 +1,6 @@
 package com.github.nieyo.validation;
 
-import com.github.nieyo.model.Shift;
+import com.github.nieyo.model.shift.Shift;
 import com.github.nieyo.repository.ShiftRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

@@ -3,7 +3,6 @@ import {FormInstance} from "antd";
 import {CreateShiftDTO} from "../types/dto/CreateShiftDTO.ts";
 import {ShiftFormValues} from "../types/form/ShiftFormValues.ts";
 import {ShiftDTO} from "../types/dto/ShiftDTO.ts";
-import {UserDTO} from "../types/dto/UserDTO.ts";
 import {Dayjs} from "dayjs";
 
 interface HandleFunctionsProps {
@@ -54,7 +53,7 @@ export const useShiftGalleryHandlers = (props: HandleFunctionsProps) => {
                 start: mergeTime(values.eventDate, values.duration[0]),
                 end: mergeTime(values.eventDate, values.duration[1])
             },
-            participants: [],
+            signups: [],
             minParticipants: values.min,
             maxParticipants: values.max
         };
@@ -76,7 +75,7 @@ export const useShiftGalleryHandlers = (props: HandleFunctionsProps) => {
     }
 
     const handleEditShift = (values: ShiftFormValues) => {
-        if (!values?.eventDate || !values.duration?.length || values.duration.length < 2 || !values?.participants || !values?.id) {
+        if (!values?.eventDate || !values.duration?.length || values.duration.length < 2 || !values?.signups || !values?.id) {
             return;
         }
 
@@ -86,8 +85,9 @@ export const useShiftGalleryHandlers = (props: HandleFunctionsProps) => {
                 start: mergeTime(values.eventDate, values.duration[0]),
                 end: mergeTime(values.eventDate, values.duration[1])
             },
-            participants: values.participants.map(name => ({
+            signups: values.signups.map(name => ({
                 name: name,
+                email: ""
             })),
             minParticipants: values.min,
             maxParticipants: values.max
@@ -106,14 +106,15 @@ export const useShiftGalleryHandlers = (props: HandleFunctionsProps) => {
             return;
         }
 
-        const newParticipant: UserDTO = {
-            name: values.name
+        const newParticipant = {
+            name: values.name,
+            email: ""
         };
 
         const updatedShift: ShiftDTO = {
             ...values.selectedShift,
-            participants: [
-                ...values.selectedShift.participants,
+            signups: [
+                ...values.selectedShift.signups,
                 newParticipant
             ]
         };

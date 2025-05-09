@@ -47,7 +47,7 @@ export default function ShiftTableColumns(props: Readonly<ShiftTableColumnsProps
             title: "Helfer",
             render: (record: ShiftDTO) => {
 
-                const length = record.participants.length;
+                const length = record.signups.length;
                 const min = record.minParticipants;
                 const max = record.maxParticipants;
 
@@ -62,8 +62,8 @@ export default function ShiftTableColumns(props: Readonly<ShiftTableColumnsProps
                             </Tag>
 
 
-                            {record.participants.length > 0 &&
-                                record.participants.map((user) => (
+                            {record.signups.length > 0 &&
+                                record.signups.map((user) => (
                                     <Space key={user.name}>
                                         <Tag key={user.name} bordered={false} icon={<UserOutlined/>}>
                                             {user.name}
@@ -77,7 +77,7 @@ export default function ShiftTableColumns(props: Readonly<ShiftTableColumnsProps
                             disabled={
                                 !dayjs(record.duration.end).isAfter(dayjs())
                                 || (
-                                    record.maxParticipants === record.participants.length
+                                    record.maxParticipants === record.signups.length
                                     && record.maxParticipants > 0
                                 )
                             }

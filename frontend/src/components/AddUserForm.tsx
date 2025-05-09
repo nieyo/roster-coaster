@@ -37,7 +37,7 @@ export default function AddUserForm(props: Readonly<AddUserFormProps>) {
                             validator: (_, value) => {
                                 if (!value) return Promise.resolve();
 
-                                const hasDuplicate = props.selectedShift?.participants
+                                const hasDuplicate = props.selectedShift?.signups
                                     .some(user => user.name.trim().toLowerCase() === value.trim().toLowerCase());
 
                                 return hasDuplicate
