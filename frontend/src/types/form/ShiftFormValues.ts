@@ -7,7 +7,7 @@ export interface ShiftFormValues {
     eventDate?: Dayjs;
     duration?: [Dayjs, Dayjs];
     name?: string;
-    participants?: string[];
+    signups?: string[];
     formName: string;
     min: number;
     max: number;
