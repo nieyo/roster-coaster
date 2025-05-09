@@ -1,6 +1,6 @@
 package com.github.nieyo.controller;
 
-import com.github.nieyo.model.shift.CreateShiftDTO;
+import com.github.nieyo.model.shift.ShiftCreateDTO;
 import com.github.nieyo.model.shift.Shift;
 import com.github.nieyo.service.ShiftService;
 import jakarta.validation.Valid;
@@ -21,7 +21,7 @@ public class ShiftController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Shift saveShift(@Valid @RequestBody CreateShiftDTO shiftToSave) {
+    public Shift saveShift(@Valid @RequestBody ShiftCreateDTO shiftToSave) {
         return shiftService.saveShift(shiftToSave);
     }
 

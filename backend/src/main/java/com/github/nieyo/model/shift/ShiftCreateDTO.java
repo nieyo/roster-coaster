@@ -7,7 +7,7 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record CreateShiftDTO(
+public record ShiftCreateDTO(
         @NotNull(message = "Duration is mandatory")
         @Valid
         ShiftDurationDTO duration,

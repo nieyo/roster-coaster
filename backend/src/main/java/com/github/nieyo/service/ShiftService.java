@@ -1,6 +1,6 @@
 package com.github.nieyo.service;
 
-import com.github.nieyo.model.shift.CreateShiftDTO;
+import com.github.nieyo.model.shift.ShiftCreateDTO;
 import com.github.nieyo.model.shift.Shift;
 import com.github.nieyo.model.shift.ShiftMapper;
 import com.github.nieyo.repository.ShiftRepository;
@@ -20,9 +20,9 @@ public class ShiftService {
     private final IdService idService;
     private final ShiftValidator shiftValidator;
 
-    public Shift saveShift(CreateShiftDTO createShiftDTO) {
+    public Shift saveShift(ShiftCreateDTO shiftCreateDTO) {
         String id = idService.randomId();
-        Shift shiftToSave = ShiftMapper.toShift(createShiftDTO, id);
+        Shift shiftToSave = ShiftMapper.toShift(shiftCreateDTO, id);
         shiftValidator.validateShift(shiftToSave);
         return shiftRepository.save(shiftToSave);
     }

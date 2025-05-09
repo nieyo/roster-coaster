@@ -38,7 +38,7 @@ class ShiftServiceTest {
     void saveShift_ShouldPersistNewEntity() {
 
         // GIVEN
-        CreateShiftDTO inputShift = CreateShiftDTO.builder()
+        ShiftCreateDTO inputShift = ShiftCreateDTO.builder()
                 .duration(durationDTO)
                 .signups(List.of())
                 .build();
@@ -79,7 +79,7 @@ class ShiftServiceTest {
 
     @Test
     void saveShift_ShouldThrowException_WhenRequiredFieldIsNull() {
-        CreateShiftDTO invalidShiftNoStart = CreateShiftDTO.builder()
+        ShiftCreateDTO invalidShiftNoStart = ShiftCreateDTO.builder()
                 .duration(
                         ShiftDurationDTO.builder()
                                 .start(null)
@@ -89,7 +89,7 @@ class ShiftServiceTest {
                 .signups(List.of())
                 .build();
 
-        CreateShiftDTO invalidShiftNoEnd = CreateShiftDTO.builder()
+        ShiftCreateDTO invalidShiftNoEnd = ShiftCreateDTO.builder()
                 .duration(
                         ShiftDurationDTO.builder()
                                 .start(startTime.toString())
@@ -108,7 +108,7 @@ class ShiftServiceTest {
 
     @Test
     void saveShift_ShouldThrowException_WhenEndTimeBeforeStartTime() {
-        CreateShiftDTO invalidShift = CreateShiftDTO.builder()
+        ShiftCreateDTO invalidShift = ShiftCreateDTO.builder()
                 .duration(
                         ShiftDurationDTO.builder()
                                 .start(endTime.toString()) // wrong order: end as start

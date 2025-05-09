@@ -25,8 +25,8 @@ public class ShiftMapper {
                 .build();
     }
 
-    public static CreateShiftDTO toCreateShiftDto(Shift shift) {
-        return CreateShiftDTO.builder()
+    public static ShiftCreateDTO toCreateShiftDto(Shift shift) {
+        return ShiftCreateDTO.builder()
                 .duration(new ShiftDurationDTO(
                         shift.duration().start().toString(),
                         shift.duration().end().toString()
@@ -60,7 +60,7 @@ public class ShiftMapper {
     }
 
 
-    public static Shift toShift(CreateShiftDTO dto, String id) {
+    public static Shift toShift(ShiftCreateDTO dto, String id) {
         return Shift.builder()
                 .id(id)
                 .duration(new ShiftDuration(

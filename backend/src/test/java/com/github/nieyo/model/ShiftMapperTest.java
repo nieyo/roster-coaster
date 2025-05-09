@@ -49,7 +49,7 @@ class ShiftMapperTest {
                 .signups(signups)
                 .build();
 
-        CreateShiftDTO dto = ShiftMapper.toCreateShiftDto(shift);
+        ShiftCreateDTO dto = ShiftMapper.toCreateShiftDto(shift);
 
         assertNotNull(dto.duration());
         assertEquals(start.toString(), dto.duration().start());
@@ -91,7 +91,7 @@ class ShiftMapperTest {
         String end = "2025-04-18T16:00:00Z";
         ShiftDurationDTO durationDTO = new ShiftDurationDTO(start, end);
         List<ShiftSignup> signups = List.of(new ShiftSignup("Alice", null, null, Instant.now()));
-        CreateShiftDTO dto = CreateShiftDTO.builder()
+        ShiftCreateDTO dto = ShiftCreateDTO.builder()
                 .duration(durationDTO)
                 .signups(signups)
                 .build();
