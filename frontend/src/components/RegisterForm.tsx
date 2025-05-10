@@ -10,7 +10,7 @@ import {
 import {Input} from "@/components/ui/input.tsx"
 import {Label} from "@/components/ui/label.tsx"
 import {Link} from "react-router-dom";
-import {ModeToggle} from "@/components/mode-toggle.tsx";
+import {ModeToggle} from "@/components/ModeToggle.tsx";
 
 export function RegisterForm({
                               className,

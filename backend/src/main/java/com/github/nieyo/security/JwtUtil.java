@@ -29,6 +29,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .subject(user.email())
                 .claim("id", user.id())
+                .claim("name", user.name())
                 .issuedAt(new Date(nowMillis))
                 .expiration(new Date(expMillis))
                 .signWith(jwtSecretKey, Jwts.SIG.HS512)

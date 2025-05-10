@@ -2,7 +2,7 @@ import React, {JSX} from "react";
 import {Card, Space, Button, Table, Popconfirm, Typography} from "antd";
 import {PlusOutlined, EditOutlined, DeleteOutlined, QuestionCircleOutlined} from "@ant-design/icons";
 import {TableRowSelection} from "antd/es/table/interface";
-import {ShiftDTO} from "../types/dto/ShiftDTO.ts";
+import {ShiftDTO} from "@/antd/types/dto/ShiftDTO.ts";
 
 interface ShiftTableCardProps {
     selectedRowKeys: React.Key[];

@@ -1,8 +1,8 @@
 import {Modal, FormInstance} from "antd";
 import React from "react";
-import {ShiftFormValues} from "../types/form/ShiftFormValues.ts";
+import {ShiftFormValues} from "@/antd/types/form/ShiftFormValues.ts";
 import ShiftForm from "./ShiftForm.tsx";
-import {ShiftDTO} from "../types/dto/ShiftDTO.ts";
+import {ShiftDTO} from "@/antd/types/dto/ShiftDTO.ts";
 
 interface GenericShiftModalProps {
     mode: "ADD_SHIFT" | "EDIT_SHIFT",

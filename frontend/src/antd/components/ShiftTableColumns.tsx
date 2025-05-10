@@ -1,6 +1,6 @@
 import {Button, Flex, Space, Tag, Typography} from "antd";
 import {PlusOutlined, UserOutlined} from "@ant-design/icons";
-import {ShiftDTO} from "../types/dto/ShiftDTO.ts";
+import {ShiftDTO} from "@/antd/types/dto/ShiftDTO.ts";
 import dayjs from "dayjs";
 
 interface ShiftTableColumnsProps {

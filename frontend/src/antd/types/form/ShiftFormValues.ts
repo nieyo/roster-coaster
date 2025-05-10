@@ -1,5 +1,5 @@
 import {Dayjs} from "dayjs";
-import {ShiftDTO} from "../dto/ShiftDTO.ts";
+import {ShiftDTO} from "@/antd/types/dto/ShiftDTO.ts";
 
 export interface ShiftFormValues {
     id?: string;

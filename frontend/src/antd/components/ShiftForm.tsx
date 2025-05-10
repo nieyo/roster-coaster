@@ -1,8 +1,8 @@
 import {DatePicker, Divider, Flex, Form, FormInstance, Input, Select, TimePicker} from "antd";
 import dayjs, {Dayjs} from "dayjs";
 import React, {useEffect} from "react";
-import {ShiftFormValues} from "../types/form/ShiftFormValues.ts";
-import {ShiftDTO} from "../types/dto/ShiftDTO.ts";
+import {ShiftFormValues} from "@/antd/types/form/ShiftFormValues.ts";
+import {ShiftDTO} from "@/antd/types/dto/ShiftDTO.ts";
 
 interface ShiftFormProps {
     mode: string,

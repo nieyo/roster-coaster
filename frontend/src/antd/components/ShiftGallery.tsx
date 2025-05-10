@@ -6,8 +6,8 @@ import ShiftCard from "./ShiftCard.tsx";
 import EventCard from "./EventCard.tsx";
 import {useShiftGalleryHandlers} from "./shiftGallery.utils.ts";
 import ShiftModal from "./ShiftModal.tsx";
-import {CreateShiftDTO} from "../types/dto/CreateShiftDTO.ts";
-import {ShiftDTO} from "../types/dto/ShiftDTO.ts";
+import {CreateShiftDTO} from "@/antd/types/dto/CreateShiftDTO.ts";
+import {ShiftDTO} from "@/antd/types/dto/ShiftDTO.ts";
 
 type TableRowSelection<T extends object = object> = TableProps<T>["rowSelection"];
 

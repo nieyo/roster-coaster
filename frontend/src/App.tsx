@@ -1,7 +1,7 @@
 import {Layout, ConfigProvider, theme} from "antd";
 import {Route, Routes} from "react-router-dom";
-import ShiftGallery from "./components/ShiftGallery.tsx";
-import useShiftState from "./hooks/useShiftState.ts";
+import ShiftGallery from "./antd/components/ShiftGallery.tsx";
+import useShiftState from "./antd/hooks/useShiftState.ts";
 import {useState} from "react";
 
 export default function App() {

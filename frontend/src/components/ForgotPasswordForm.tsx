@@ -4,7 +4,7 @@ import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {Link} from "react-router-dom";
 import {cn} from "@/lib/utils.ts";
-import {ModeToggle} from "@/components/mode-toggle.tsx";
+import {ModeToggle} from "@/components/ModeToggle.tsx";
 
 export function ForgotPasswordForm({
                                        className,

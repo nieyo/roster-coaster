@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useState} from 'react';
 import axios from 'axios';
-import {CreateShiftDTO} from "../types/dto/CreateShiftDTO.ts";
-import {ShiftDTO} from "../types/dto/ShiftDTO.ts";
+import {CreateShiftDTO} from "@/antd/types/dto/CreateShiftDTO.ts";
+import {ShiftDTO} from "@/antd/types/dto/ShiftDTO.ts";
 
 
 

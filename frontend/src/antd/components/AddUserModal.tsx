@@ -1,7 +1,7 @@
 import {Modal, FormInstance} from "antd";
-import AddUserForm from "./AddUserForm";
-import {ShiftFormValues} from "../types/form/ShiftFormValues.ts";
-import {ShiftDTO} from "../types/dto/ShiftDTO.ts";
+import AddUserForm from "./AddUserForm.tsx";
+import {ShiftFormValues} from "@/antd/types/form/ShiftFormValues.ts";
+import {ShiftDTO} from "@/antd/types/dto/ShiftDTO.ts";
 
 interface AddUserModalProps {
     visible: boolean;

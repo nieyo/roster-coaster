@@ -1,8 +1,8 @@
 import React from "react";
 import {FormInstance} from "antd";
-import {CreateShiftDTO} from "../types/dto/CreateShiftDTO.ts";
-import {ShiftFormValues} from "../types/form/ShiftFormValues.ts";
-import {ShiftDTO} from "../types/dto/ShiftDTO.ts";
+import {CreateShiftDTO} from "@/antd/types/dto/CreateShiftDTO.ts";
+import {ShiftFormValues} from "@/antd/types/form/ShiftFormValues.ts";
+import {ShiftDTO} from "@/antd/types/dto/ShiftDTO.ts";
 import {Dayjs} from "dayjs";
 
 interface HandleFunctionsProps {
