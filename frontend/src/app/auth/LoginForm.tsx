@@ -1,18 +1,18 @@
-import {cn} from "@/lib/utils"
-import {Button} from "@/components/ui/button"
+import {cn} from "@/lib/utils.ts"
+import {Button} from "@/components/ui/button.tsx"
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
-import {Input} from "@/components/ui/input"
-import {Label} from "@/components/ui/label"
+} from "@/components/ui/card.tsx"
+import {Input} from "@/components/ui/input.tsx"
+import {Label} from "@/components/ui/label.tsx"
 import {Link, Navigate, useNavigate} from "react-router-dom";
 import {ModeToggle} from "@/components/ModeToggle.tsx";
 import React, {useState} from "react";
-import {useAuth} from "@/context/useAuth.ts";
+import {useAuth} from "@/hooks/useAuth.ts";
 
 export function LoginForm({className, ...props}: React.ComponentProps<"div">) {
 
@@ -97,14 +97,6 @@ export function LoginForm({className, ...props}: React.ComponentProps<"div">) {
                             <div className="flex flex-col gap-3">
                                 <Button type="submit" className={cn("w-full", error ? "text-red-500" : "")}>
                                     {error ?? "Login"}
-                                </Button>
-                                <Button type="button" variant={"destructive"} onClick={() => {
-                                    setEmail("demo@de.mo");
-                                    setPassword("Start123");
-                                    setError(null);
-                                }}
-                                >
-                                    Demo Login
                                 </Button>
                             </div>
 
