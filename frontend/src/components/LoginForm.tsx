@@ -16,7 +16,7 @@ import {useAuth} from "@/context/useAuth.ts";
 
 export function LoginForm({className, ...props}: React.ComponentProps<"div">) {
 
-    const {login, isAuthenticated} = useAuth();
+    const { login, isAuthenticated } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
@@ -93,12 +93,13 @@ export function LoginForm({className, ...props}: React.ComponentProps<"div">) {
                                     }}
                                 />
                             </div>
+
                             <div className="flex flex-col gap-3">
                                 <Button type="submit" className={cn("w-full", error ? "text-red-500" : "")}>
                                     {error ?? "Login"}
                                 </Button>
                                 <Button type="button" variant={"destructive"} onClick={() => {
-                                    setEmail("test@rc.local");
+                                    setEmail("demo@de.mo");
                                     setPassword("Start123");
                                     setError(null);
                                 }}
@@ -106,9 +107,10 @@ export function LoginForm({className, ...props}: React.ComponentProps<"div">) {
                                     Demo Login
                                 </Button>
                             </div>
+
                         </div>
                         <div className="mt-4 text-center text-sm">
-                            Don&apos;t have an account?{" "}
+                            Don't have an account?{" "}
                             <Link to="/register" className="underline underline-offset-4">
                                 Sign up
                             </Link>

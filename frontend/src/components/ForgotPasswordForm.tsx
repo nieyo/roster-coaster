@@ -5,6 +5,7 @@ import {Label} from "@/components/ui/label"
 import {Link} from "react-router-dom";
 import {cn} from "@/lib/utils.ts";
 import {ModeToggle} from "@/components/ModeToggle.tsx";
+import React from "react";
 
 export function ForgotPasswordForm({
                                        className,
@@ -13,15 +14,19 @@ export function ForgotPasswordForm({
 
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
-            <div className="absolute top-4 right-4">
-                <ModeToggle />
-            </div>
             <Card>
                 <CardHeader>
-                    <CardTitle>Recover Password</CardTitle>
-                    <CardDescription>
-                        Enter your email address to reset your password.
-                    </CardDescription>
+                    <div className="flex items-start justify-between">
+                        <div>
+                            <CardTitle className="mb-2">Recover Password</CardTitle>
+                            <CardDescription>
+                                Enter your email address to reset your password
+                            </CardDescription>
+                        </div>
+                        <div className={"pl-4"}>
+                            <ModeToggle/>
+                        </div>
+                    </div>
                 </CardHeader>
                 <CardContent>
                     <form>

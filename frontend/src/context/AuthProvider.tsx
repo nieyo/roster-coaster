@@ -6,13 +6,32 @@ import {LoginRequest} from "@/context/LoginRequest.ts";
 import {jwtDecode} from "jwt-decode";
 import {JwtPayload} from "@/context/JwtPayload.ts";
 import {useNavigate} from "react-router-dom";
+import {RegisterRequest} from "@/context/RegisterRequest.ts";
 
 const LOGIN_API_URL = "/api/auth/login";
+const REGISTER_API_URL = "/api/auth/register";
 
 export function AuthProvider({children}: Readonly<{ children: ReactNode }>) {
     const [user, setUser] = useState<UserDTO | null>(null);
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
 
+    const register = useCallback(async (request: RegisterRequest) => {
+        const response = await fetch(REGISTER_API_URL, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(request),
+        });
+
+        if (!response.ok) {
+            throw new Error("Registration failed");
+        }
+
+        const data: AuthResponse = await response.json();
+        localStorage.setItem("token", data.token);
+        const payload = jwtDecode<JwtPayload>(data.token);
+        setUser({ name: payload.name, email: payload.sub });
+    }, []);
 
     const login = useCallback(async (request: LoginRequest) => {
         const response = await fetch(LOGIN_API_URL, {
@@ -27,7 +46,8 @@ export function AuthProvider({children}: Readonly<{ children: ReactNode }>) {
 
         const data: AuthResponse = await response.json();
         localStorage.setItem("token", data.token);
-        setUser({name: data.name, email: data.email});
+        const payload = jwtDecode<JwtPayload>(data.token);
+        setUser({ name: payload.name, email: payload.sub });
     }, []);
 
     const logout = useCallback(() => {
@@ -39,8 +59,8 @@ export function AuthProvider({children}: Readonly<{ children: ReactNode }>) {
     const isAuthenticated = !!user;
 
     const value = useMemo<AuthContextType>(
-        () => ({user, isAuthenticated, login, logout}),
-        [user, isAuthenticated, login, logout]
+        () => ({user, register, login, isAuthenticated, logout, loading}),
+        [user, register, login, isAuthenticated, logout, loading]
     );
 
     useEffect(() => {
@@ -55,6 +75,7 @@ export function AuthProvider({children}: Readonly<{ children: ReactNode }>) {
                 localStorage.removeItem("token");
             }
         }
+        setLoading(false);
     }, []);
 
     return (
