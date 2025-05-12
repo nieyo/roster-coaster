@@ -38,9 +38,14 @@ public class JwtUtil {
     }
 
     public boolean validateToken(String jwt, UserDetails userDetails) {
-        final String username = extractUsername(jwt);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(jwt));
+        try {
+            final String username = extractUsername(jwt);
+            return (username.equals(userDetails.getUsername()) && !isTokenExpired(jwt));
+        } catch (io.jsonwebtoken.JwtException e) {
+            return false;
+        }
     }
+
 
     public String extractUsername(String jwt) {
         return extractAllClaims(jwt).getSubject();
