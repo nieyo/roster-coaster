@@ -6,7 +6,7 @@ import java.util.UUID;
 
 @Component
 public class IdService {
-    public String randomId() {
-        return UUID.randomUUID().toString();
+    public UUID randomId() {
+        return UUID.randomUUID();
     }
 }

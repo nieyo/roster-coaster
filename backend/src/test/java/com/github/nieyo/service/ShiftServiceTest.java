@@ -1,6 +1,13 @@
 package com.github.nieyo.service;
 
-import com.github.nieyo.model.shift.*;
+import com.github.nieyo.dto.ShiftCreateDTO;
+import com.github.nieyo.dto.ShiftDTO;
+import com.github.nieyo.dto.ShiftDurationDTO;
+import com.github.nieyo.entity.Shift;
+import com.github.nieyo.entity.ShiftDuration;
+import com.github.nieyo.entity.ShiftSignup;
+import com.github.nieyo.mapper.ShiftDurationMapper;
+import com.github.nieyo.mapper.ShiftMapper;
 import com.github.nieyo.repository.ShiftRepository;
 import com.github.nieyo.validation.ShiftValidator;
 import org.junit.jupiter.api.Test;
@@ -12,6 +19,7 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -29,8 +37,13 @@ class ShiftServiceTest {
     Instant startTime = now.plus(Duration.ofMinutes(15));
     Instant endTime = startTime.plus(Duration.ofMinutes(30));
     ShiftDuration duration = new ShiftDuration(startTime, endTime);
-    ShiftDurationDTO durationDTO = new ShiftDurationDTO(startTime.toString(), endTime.toString());
+    ShiftDurationDTO durationDTO = ShiftDurationMapper.toDto(duration);
     List<ShiftSignup> signups = List.of();
+
+    private static final UUID NOT_EXISTING_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+    private static final UUID ID_1 = UUID.fromString("11111111-1111-1111-1111-111111111111");
+    private static final UUID ID_2 = UUID.fromString("22222222-2222-2222-2222-222222222222");
+    private static final UUID ID_3 = UUID.fromString("33333333-3333-3333-3333-333333333333");
 
 
     // CREATE
@@ -43,7 +56,7 @@ class ShiftServiceTest {
                 .signups(List.of())
                 .build();
 
-        String expectedId = "generated-id";
+        UUID expectedId = ID_1;
         when(idService.randomId()).thenReturn(expectedId);
 
         Shift expected = Shift.builder()
@@ -55,15 +68,15 @@ class ShiftServiceTest {
         when(shiftRepository.save(any(Shift.class))).thenReturn(expected);
 
         // WHEN
-        Shift actual = shiftService.saveShift(inputShift);
+        ShiftDTO actual = shiftService.saveShift(inputShift);
 
         // THEN
         verify(idService).randomId();
         verify(shiftRepository).save(any(Shift.class));
         assertNotNull(actual);
         assertEquals(expected.id(), actual.id());
-        assertEquals(expected.duration().start(), actual.duration().start());
-        assertEquals(expected.duration().end(), actual.duration().end());
+        assertEquals(expected.duration().start().toString(), actual.duration().start());
+        assertEquals(expected.duration().end().toString(), actual.duration().end());
         assertEquals(expected.signups(), actual.signups());
     }
 
@@ -128,38 +141,46 @@ class ShiftServiceTest {
     @Test
     void getShifts_whenEmpty_returnEmptyList() {
         // GIVEN
-        List<Shift> expected = List.of();
-        when(shiftRepository.findAll()).thenReturn(expected);
+        when(shiftRepository.findAll()).thenReturn(List.of());
+
         // WHEN
-        List<Shift> actual = shiftService.getShifts();
+        List<ShiftDTO> actual = shiftService.getShifts();
+
         // THEN
         verify(shiftRepository).findAll();
-        assertEquals(expected, actual);
+        assertTrue(actual.isEmpty());
     }
+
 
     @Test
     void getShifts_whenNotEmpty_returnShiftList() {
         // GIVEN
-        List<Shift> expected = List.of(
+        List<Shift> shifts = List.of(
                 Shift.builder()
-                        .id("1")
+                        .id(ID_1)
                         .duration(duration)
                         .signups(signups)
                         .build(),
                 Shift.builder()
-                        .id("2")
+                        .id(ID_2)
                         .duration(duration)
                         .signups(signups)
                         .build(),
                 Shift.builder()
-                        .id("3")
+                        .id(ID_3)
                         .duration(duration)
                         .signups(signups)
                         .build()
         );
-        when(shiftRepository.findAll()).thenReturn(expected);
+        List<ShiftDTO> expected = shifts.stream()
+                .map(ShiftMapper::toShiftDto)
+                .toList();
+
+        when(shiftRepository.findAll()).thenReturn(shifts);
+
         // WHEN
-        List<Shift> actual = shiftService.getShifts();
+        List<ShiftDTO> actual = shiftService.getShifts();
+
         // THEN
         verify(shiftRepository).findAll();
         assertEquals(expected, actual);
@@ -169,46 +190,49 @@ class ShiftServiceTest {
     @Test
     void getShiftById_whenIdExists_returnShift() {
         // GIVEN
-        String existingId = "idToSearchFor";
-        Optional<Shift> expected = Optional.of(
-                Shift.builder()
-                        .id(existingId)
-                        .duration(duration)
-                        .signups(signups)
-                        .build()
-        );
-        when(shiftRepository.findById(existingId)).thenReturn(expected);
+        UUID existingId = ID_1;
+        Shift shift = Shift.builder()
+                .id(existingId)
+                .duration(duration)
+                .signups(signups)
+                .build();
+        Optional<Shift> found = Optional.of(shift);
+        ShiftDTO expectedDto = ShiftMapper.toShiftDto(shift);
+
+        when(shiftRepository.findById(existingId)).thenReturn(found);
 
         // WHEN
-        Optional<Shift> actual = shiftService.getShiftById(existingId);
+        Optional<ShiftDTO> actual = shiftService.getShiftById(existingId);
 
         // THEN
         verify(shiftRepository).findById(existingId);
-        assertEquals(expected, actual);
+        assertTrue(actual.isPresent());
+        assertEquals(expectedDto, actual.get());
     }
+
 
     @Test
     void getShiftById_whenIdDoesNotExists_returnEmptyOptional() {
         // GIVEN
-        String nonExistingId = "idToSearchFor";
-        Optional<Shift> expected = Optional.empty();
-        when(shiftRepository.findById(nonExistingId)).thenReturn(expected);
+        UUID nonExistingId = NOT_EXISTING_ID;
+        when(shiftRepository.findById(nonExistingId)).thenReturn(Optional.empty());
 
         // WHEN
-        Optional<Shift> actual = shiftService.getShiftById(nonExistingId);
+        Optional<ShiftDTO> actual = shiftService.getShiftById(nonExistingId);
 
         // THEN
         verify(shiftRepository).findById(nonExistingId);
-        assertEquals(expected, actual);
+        assertTrue(actual.isEmpty());
     }
+
 
     // UPDATE
     @Test
     void updateShift_whenFound_returnShift() {
         // GIVEN
-        String targetId = "2";
+        UUID targetId = ID_2;
         Shift expected = Shift.builder()
-                .id("2")
+                .id(ID_2)
                 .duration(duration.withEnd(endTime.plusSeconds(3600)))
                 .signups(signups)
                 .build();
@@ -216,73 +240,80 @@ class ShiftServiceTest {
         when(shiftRepository.save(expected)).thenReturn(expected);
 
         // WHEN
-        Shift actual = shiftService.updateShift(targetId, expected);
+        ShiftDTO actual = shiftService.updateShift(targetId, ShiftMapper.toShiftDto(expected));
 
         // THEN
         verify(shiftRepository).existsById(targetId);
         verify(shiftRepository).save(expected);
         assertEquals(expected.id(), actual.id());
-        assertEquals(expected.duration().start(), actual.duration().start());
-        assertEquals(expected.duration().end(), actual.duration().end());
+        assertEquals(expected.duration().start().toString(), actual.duration().start());
+        assertEquals(expected.duration().end().toString(), actual.duration().end());
         assertEquals(expected.signups(), actual.signups());
     }
 
     @Test
     void updateShift_whenNotFound_throwNoSuchElementException() {
-        String targetId = "3";
+        // GIVEN
+        UUID targetId = ID_3;
         Shift updatedShift = Shift.builder()
                 .id(targetId)
                 .duration(duration)
                 .signups(signups)
                 .build();
+        ShiftDTO updatedShiftDto = ShiftMapper.toShiftDto(updatedShift);
         when(shiftRepository.existsById(targetId)).thenReturn(false);
 
         // WHEN + THEN
-        assertThrows(NoSuchElementException.class, () -> shiftService.updateShift(targetId, updatedShift));
+        assertThrows(NoSuchElementException.class, () -> shiftService.updateShift(targetId, updatedShiftDto));
         verify(shiftRepository, never()).save(any());
     }
+
 
     @Test
     void updateShift_whenIdDoesNotMatch_throwIllegalArgumentException() {
         // GIVEN
-        String targetId = "3";
+        UUID targetId = ID_1;
         Shift updatedShift = Shift.builder()
-                .id("notMatchingId")
+                .id(ID_2)
                 .duration(duration)
                 .signups(signups)
                 .build();
         when(shiftRepository.existsById(targetId)).thenReturn(true);
         when(shiftRepository.save(updatedShift)).thenReturn(updatedShift);
 
-        // WHEN + THEN
-        assertThrows(IllegalArgumentException.class, () -> shiftService.updateShift(targetId, updatedShift));
+        // Prepare the DTO outside the lambda
+        ShiftDTO updatedShiftDto = ShiftMapper.toShiftDto(updatedShift);
+
+        // WHEN + THEN: Only one invocation in the lambda
+        assertThrows(IllegalArgumentException.class, () -> shiftService.updateShift(targetId, updatedShiftDto));
         verify(shiftRepository, never()).save(any());
     }
+
 
     // DELETE
     @Test
     void deleteShift_whenFound_deleteShift() {
         // GIVEN
-        when(shiftRepository.existsById("1")).thenReturn(true);
+        when(shiftRepository.existsById(ID_1)).thenReturn(true);
 
         // WHEN
-        boolean deleted = shiftService.deleteShiftById("1");
+        boolean deleted = shiftService.deleteShiftById(ID_1);
 
         // THEN
-        verify(shiftRepository).deleteById("1");
+        verify(shiftRepository).deleteById(ID_1);
         assertTrue(deleted);
     }
 
     @Test
     void deleteShift_whenNotFound_returnFalse() {
         // GIVEN
-        when(shiftRepository.existsById("1")).thenReturn(false);
+        when(shiftRepository.existsById(ID_1)).thenReturn(false);
 
         // WHEN
-        boolean deleted = shiftService.deleteShiftById("1");
+        boolean deleted = shiftService.deleteShiftById(ID_1);
 
         // THEN
-        verify(shiftRepository, never()).deleteById(anyString());
+        verify(shiftRepository, never()).deleteById(any(UUID.class));
         assertFalse(deleted);
     }
 }

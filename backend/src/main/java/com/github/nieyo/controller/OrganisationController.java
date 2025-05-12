@@ -1,11 +1,13 @@
 package com.github.nieyo.controller;
 
-import com.github.nieyo.model.organisation.Organisation;
+import com.github.nieyo.dto.OrganisationDTO;
 import com.github.nieyo.service.OrganisationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/organisations")
@@ -15,28 +17,31 @@ public class OrganisationController {
     private final OrganisationService organisationService;
 
     @GetMapping
-    public List<Organisation> getAll() {
+    public List<OrganisationDTO> getAll() {
         return organisationService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Organisation getById(@PathVariable String id) {
-        return organisationService.findById(id).orElse(null);
+    public ResponseEntity<OrganisationDTO> getById(@PathVariable UUID id) {
+        return organisationService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+
     @PostMapping
-    public Organisation create(@RequestBody Organisation organisation) {
+    public OrganisationDTO create(@RequestBody OrganisationDTO organisation) {
         return organisationService.save(organisation);
     }
 
     @PutMapping("/{id}")
-    public Organisation update(@PathVariable String id, @RequestBody Organisation organisation) {
+    public OrganisationDTO update(@PathVariable UUID id, @RequestBody OrganisationDTO organisation) {
         // Optional: Prüfen, ob id und organisation.id übereinstimmen
-        return organisationService.save(organisation);
+        return organisationService.save(id, organisation);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable String id) {
+    public void delete(@PathVariable UUID id) {
         organisationService.deleteById(id);
     }
 }
